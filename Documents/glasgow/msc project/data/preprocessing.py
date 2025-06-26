@@ -194,7 +194,6 @@ def unequal_interval_plot(df):
     plt.tight_layout()
     plt.show()
 
-# fine outliers based on time intervals
 def quick_find_outliers(df, missing_data_file='missing_times.txt', fuzzy_data_file='fuzzy_input.csv', threshold_seconds=1800):
     print('\n==== outliers ====')
     
@@ -253,6 +252,8 @@ def quick_find_outliers(df, missing_data_file='missing_times.txt', fuzzy_data_fi
             
             fuzzy_record = {
                 'gap_index': idx,
+                'gap_start_time': start_time.strftime('%Y-%m-%d %H:%M'),
+                'gap_end_time': end_time.strftime('%Y-%m-%d %H:%M'),
                 'gap_duration_minutes': minutes,
                 'missing_records_count': missing_count,
                 'power_before': power_before,
