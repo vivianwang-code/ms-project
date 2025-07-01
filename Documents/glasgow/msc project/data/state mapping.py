@@ -3,8 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from datetime import datetime, timedelta
-import warnings
-warnings.filterwarnings('ignore')
 
 def load_processed_data(file_path='data_after_preprocessing.csv'):
 

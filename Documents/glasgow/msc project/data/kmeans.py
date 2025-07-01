@@ -91,11 +91,11 @@ def kmeans_power(df):
     k = 3
     power_kmeans_data = nonzero_power['power'].values.reshape(-1,1)
     kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
-    nonzero_power = nonzero_power.copy()  # 避免 SettingWithCopyWarning
+    nonzero_power = nonzero_power.copy() 
     nonzero_power['cluster'] = kmeans.fit_predict(power_kmeans_data)
 
     #label zero power as -1 cluster
-    zero_power = zero_power.copy()  # 避免 SettingWithCopyWarning
+    zero_power = zero_power.copy() 
     zero_power['cluster'] = -1   
 
     #combine zero_power + nonzero_power
