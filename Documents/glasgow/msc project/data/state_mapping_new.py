@@ -14,9 +14,7 @@ def load_processed_data(file_path='data_after_preprocessing.csv'):
     if len(df) == 0:
         print("No data found in the file.")
 
-
     else:
-        
         print(f"total : {len(df)} records")
         print(f"time range : {df['timestamp'].min()} to {df['timestamp'].max()}")
 
