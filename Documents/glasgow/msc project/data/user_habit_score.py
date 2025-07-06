@@ -421,18 +421,113 @@ class UserHabitScoreModule:
         
         return self.time_factor_matrix
     
+    def calculate_membership_parameters(self):
+        """基於實際數據計算隸屬函數參數（統計百分位數方法）"""
+        print("==== Calculating Statistical Membership Parameters ====")
+        
+        # 收集所有實際數據值
+        usage_probs = []
+        stabilities = []
+        time_factors = []
+        
+        for day_type in ['weekday', 'weekend']:
+            for time_slot in range(self.time_slots):
+                # 使用機率數據
+                if (day_type, time_slot) in self.usage_probability_matrix:
+                    prob = self.usage_probability_matrix[(day_type, time_slot)]['short_prob']
+                    usage_probs.append(prob)
+                
+                # 穩定性數據
+                if (day_type, time_slot) in self.stability_matrix:
+                    stability = self.stability_matrix[(day_type, time_slot)]['overall_stability']
+                    stabilities.append(stability)
+                
+                # 時間因子數據
+                if (day_type, time_slot) in self.time_factor_matrix:
+                    time_factor = self.time_factor_matrix[(day_type, time_slot)]['weighted_usage_rate']
+                    time_factors.append(time_factor)
+        
+        # 計算百分位數
+        # 使用機率的百分位數
+        if usage_probs:
+            usage_percentiles = {
+                'p0': np.percentile(usage_probs, 0),
+                'p25': np.percentile(usage_probs, 25),
+                'p50': np.percentile(usage_probs, 50),
+                'p75': np.percentile(usage_probs, 75),
+                'p100': np.percentile(usage_probs, 100)
+            }
+        else:
+            usage_percentiles = {'p0': 0.0, 'p25': 0.25, 'p50': 0.5, 'p75': 0.75, 'p100': 1.0}
+        
+        # 穩定性的百分位數
+        if stabilities:
+            stability_percentiles = {
+                'p0': np.percentile(stabilities, 0),
+                'p25': np.percentile(stabilities, 25),
+                'p50': np.percentile(stabilities, 50),
+                'p75': np.percentile(stabilities, 75),
+                'p100': np.percentile(stabilities, 100)
+            }
+        else:
+            stability_percentiles = {'p0': 0.0, 'p25': 0.25, 'p50': 0.5, 'p75': 0.75, 'p100': 1.0}
+        
+        # 時間因子的百分位數
+        if time_factors:
+            time_percentiles = {
+                'p0': np.percentile(time_factors, 0),
+                'p25': np.percentile(time_factors, 25),
+                'p50': np.percentile(time_factors, 50),
+                'p75': np.percentile(time_factors, 75),
+                'p100': np.percentile(time_factors, 100)
+            }
+        else:
+            time_percentiles = {'p0': 0.0, 'p25': 0.25, 'p50': 0.5, 'p75': 0.75, 'p100': 1.0}
+        
+        # 存儲百分位數參數
+        self.membership_parameters = {
+            'usage_probability': usage_percentiles,
+            'stability': stability_percentiles,
+            'time_factor': time_percentiles
+        }
+        
+        # 打印統計結果
+        print("\nUsage Probability Percentiles:")
+        for key, value in usage_percentiles.items():
+            print(f"  {key}: {value:.3f}")
+        
+        print("\nStability Percentiles:")
+        for key, value in stability_percentiles.items():
+            print(f"  {key}: {value:.3f}")
+        
+        print("\nTime Factor Percentiles:")
+        for key, value in time_percentiles.items():
+            print(f"  {key}: {value:.3f}")
+        
+        return self.membership_parameters
+
     def triangular_membership(self, x, a, b, c):
         """三角隸屬函數"""
         return np.maximum(0, np.minimum((x - a) / (b - a), (c - x) / (c - b)))
     
     def calculate_fuzzy_memberships(self, timestamp):
-        """計算指定時間點的模糊隸屬度"""
+        """計算指定時間點的模糊隸屬度 - 使用統計百分位數"""
+        # 確保已計算統計參數
+        if not hasattr(self, 'membership_parameters'):
+            print("Warning: membership_parameters not found, using default values")
+            # 使用默認值
+            self.membership_parameters = {
+                'usage_probability': {'p0': 0.0, 'p25': 0.25, 'p50': 0.5, 'p75': 0.75, 'p100': 1.0},
+                'stability': {'p0': 0.0, 'p25': 0.25, 'p50': 0.5, 'p75': 0.75, 'p100': 1.0},
+                'time_factor': {'p0': 0.0, 'p25': 0.25, 'p50': 0.5, 'p75': 0.75, 'p100': 1.0}
+            }
+        
         # 提取時間特徵
         hour = timestamp.hour
         minute = timestamp.minute
         is_weekend = timestamp.weekday() >= 5
         day_type = 'weekend' if is_weekend else 'weekday'
-        time_slot = hour * 4 + minute // 15  # 0-95個時段
+        time_slot = hour * 4 + minute // 15
         
         result = {
             'day_type': day_type,
@@ -444,14 +539,19 @@ class UserHabitScoreModule:
         # 獲取使用機率
         if (day_type, time_slot) in self.usage_probability_matrix:
             prob_data = self.usage_probability_matrix[(day_type, time_slot)]
-            
-            # 使用短期機率作為主要指標
             short_prob = prob_data['short_prob']
             
-            # 使用機率模糊化
-            result['usage_prob_low'] = self.triangular_membership(short_prob, 0, 0.15, 0.3)
-            result['usage_prob_medium'] = self.triangular_membership(short_prob, 0.3, 0.5, 0.7)
-            result['usage_prob_high'] = self.triangular_membership(short_prob, 0.7, 0.85, 1.0)
+            # === 修改這裡：使用統計百分位數的三角形參數 ===
+            usage_params = self.membership_parameters['usage_probability']
+            result['usage_prob_low'] = self.triangular_membership(
+                short_prob, usage_params['p0'], usage_params['p25'], usage_params['p50']
+            )
+            result['usage_prob_medium'] = self.triangular_membership(
+                short_prob, usage_params['p25'], usage_params['p50'], usage_params['p75']
+            )
+            result['usage_prob_high'] = self.triangular_membership(
+                short_prob, usage_params['p50'], usage_params['p75'], usage_params['p100']
+            )
             result['usage_probability'] = short_prob
         else:
             result['usage_prob_low'] = 0.7
@@ -464,10 +564,17 @@ class UserHabitScoreModule:
             stability_data = self.stability_matrix[(day_type, time_slot)]
             overall_stability = stability_data['overall_stability']
             
-            # 穩定性模糊化
-            result['stability_low'] = self.triangular_membership(overall_stability, 0, 0.2, 0.4)
-            result['stability_medium'] = self.triangular_membership(overall_stability, 0.4, 0.6, 0.8)
-            result['stability_high'] = self.triangular_membership(overall_stability, 0.8, 0.9, 1.0)
+            # === 修改這裡：使用統計百分位數的三角形參數 ===
+            stability_params = self.membership_parameters['stability']
+            result['stability_low'] = self.triangular_membership(
+                overall_stability, stability_params['p0'], stability_params['p25'], stability_params['p50']
+            )
+            result['stability_medium'] = self.triangular_membership(
+                overall_stability, stability_params['p25'], stability_params['p50'], stability_params['p75']
+            )
+            result['stability_high'] = self.triangular_membership(
+                overall_stability, stability_params['p50'], stability_params['p75'], stability_params['p100']
+            )
             result['stability'] = overall_stability
         else:
             result['stability_low'] = 0.8
@@ -480,10 +587,17 @@ class UserHabitScoreModule:
             time_data = self.time_factor_matrix[(day_type, time_slot)]
             usage_rate = time_data['weighted_usage_rate']
             
-            # 時間因子模糊化
-            result['time_non_use'] = self.triangular_membership(usage_rate, 0, 0.15, 0.3)
-            result['time_possible'] = self.triangular_membership(usage_rate, 0.3, 0.5, 0.7)
-            result['time_peak'] = self.triangular_membership(usage_rate, 0.7, 0.85, 1.0)
+            # === 修改這裡：使用統計百分位數的三角形參數 ===
+            time_params = self.membership_parameters['time_factor']
+            result['time_non_use'] = self.triangular_membership(
+                usage_rate, time_params['p0'], time_params['p25'], time_params['p50']
+            )
+            result['time_possible'] = self.triangular_membership(
+                usage_rate, time_params['p25'], time_params['p50'], time_params['p75']
+            )
+            result['time_peak'] = self.triangular_membership(
+                usage_rate, time_params['p50'], time_params['p75'], time_params['p100']
+            )
             result['time_factor'] = usage_rate
         else:
             result['time_non_use'] = 0.6
@@ -817,108 +931,121 @@ class UserHabitScoreModule:
                 print("  No high usage time slots found")
     
     def _plot_triangular_memberships(self):
-        """顯示三角隸屬函數"""
-        print("==== Creating Triangular Membership Functions Plot ====")
+        """顯示基於統計百分位數的三角隸屬函數"""
+        print("==== Creating Statistical Triangular Membership Functions ====")
+        
+        # 確保已計算統計參數
+        if not hasattr(self, 'membership_parameters'):
+            print("Warning: No membership parameters found. Using default values.")
+            self.membership_parameters = {
+                'usage_probability': {'p0': 0.0, 'p25': 0.25, 'p50': 0.5, 'p75': 0.75, 'p100': 1.0},
+                'stability': {'p0': 0.0, 'p25': 0.25, 'p50': 0.5, 'p75': 0.75, 'p100': 1.0},
+                'time_factor': {'p0': 0.0, 'p25': 0.25, 'p50': 0.5, 'p75': 0.75, 'p100': 1.0}
+            }
         
         fig, axes = plt.subplots(1, 3, figsize=(18, 6))
         
         # 1. Usage Probability 隸屬函數
         x_usage = np.linspace(0, 1, 1000)
+        usage_params = self.membership_parameters['usage_probability']
         
-        usage_low = self.triangular_membership(x_usage, 0, 0.15, 0.3)
-        usage_medium = self.triangular_membership(x_usage, 0.3, 0.5, 0.7)
-        usage_high = self.triangular_membership(x_usage, 0.7, 0.85, 1.0)
+        usage_low = self.triangular_membership(x_usage, usage_params['p0'], usage_params['p25'], usage_params['p50'])
+        usage_medium = self.triangular_membership(x_usage, usage_params['p25'], usage_params['p50'], usage_params['p75'])
+        usage_high = self.triangular_membership(x_usage, usage_params['p50'], usage_params['p75'], usage_params['p100'])
         
-        axes[0].plot(x_usage, usage_low, 'r-', linewidth=2, label='Low (0-0.15-0.3)')
-        axes[0].plot(x_usage, usage_medium, 'orange', linewidth=2, label='Medium (0.3-0.5-0.7)')
-        axes[0].plot(x_usage, usage_high, 'g-', linewidth=2, label='High (0.7-0.85-1.0)')
+        axes[0].plot(x_usage, usage_low, 'r-', linewidth=2, 
+                    label=f'Low ({usage_params["p0"]:.2f}-{usage_params["p25"]:.2f}-{usage_params["p50"]:.2f})')
+        axes[0].plot(x_usage, usage_medium, 'orange', linewidth=2, 
+                    label=f'Medium ({usage_params["p25"]:.2f}-{usage_params["p50"]:.2f}-{usage_params["p75"]:.2f})')
+        axes[0].plot(x_usage, usage_high, 'g-', linewidth=2, 
+                    label=f'High ({usage_params["p50"]:.2f}-{usage_params["p75"]:.2f}-{usage_params["p100"]:.2f})')
         
         axes[0].set_xlabel('Usage Probability')
         axes[0].set_ylabel('Membership Degree')
-        axes[0].set_title('Usage Probability Membership Functions')
+        axes[0].set_title('Usage Probability (Statistical Percentiles)')
         axes[0].legend()
         axes[0].grid(True, alpha=0.3)
         axes[0].set_xlim(0, 1)
         axes[0].set_ylim(0, 1.1)
         
-        # 標記關鍵點
-        axes[0].axvline(0.15, color='gray', linestyle='--', alpha=0.5)
-        axes[0].axvline(0.3, color='gray', linestyle='--', alpha=0.5)
-        axes[0].axvline(0.5, color='gray', linestyle='--', alpha=0.5)
-        axes[0].axvline(0.7, color='gray', linestyle='--', alpha=0.5)
-        axes[0].axvline(0.85, color='gray', linestyle='--', alpha=0.5)
+        # 標記百分位數線
+        for percentile in [usage_params['p25'], usage_params['p50'], usage_params['p75']]:
+            axes[0].axvline(percentile, color='gray', linestyle='--', alpha=0.5)
         
         # 2. Usage Stability 隸屬函數
         x_stability = np.linspace(0, 1, 1000)
+        stability_params = self.membership_parameters['stability']
         
-        stability_low = self.triangular_membership(x_stability, 0, 0.2, 0.4)
-        stability_medium = self.triangular_membership(x_stability, 0.4, 0.6, 0.8)
-        stability_high = self.triangular_membership(x_stability, 0.8, 0.9, 1.0)
+        stability_low = self.triangular_membership(x_stability, stability_params['p0'], stability_params['p25'], stability_params['p50'])
+        stability_medium = self.triangular_membership(x_stability, stability_params['p25'], stability_params['p50'], stability_params['p75'])
+        stability_high = self.triangular_membership(x_stability, stability_params['p50'], stability_params['p75'], stability_params['p100'])
         
-        axes[1].plot(x_stability, stability_low, 'r-', linewidth=2, label='Low (0-0.2-0.4)')
-        axes[1].plot(x_stability, stability_medium, 'orange', linewidth=2, label='Medium (0.4-0.6-0.8)')
-        axes[1].plot(x_stability, stability_high, 'g-', linewidth=2, label='High (0.8-0.9-1.0)')
+        axes[1].plot(x_stability, stability_low, 'r-', linewidth=2, 
+                    label=f'Low ({stability_params["p0"]:.2f}-{stability_params["p25"]:.2f}-{stability_params["p50"]:.2f})')
+        axes[1].plot(x_stability, stability_medium, 'orange', linewidth=2, 
+                    label=f'Medium ({stability_params["p25"]:.2f}-{stability_params["p50"]:.2f}-{stability_params["p75"]:.2f})')
+        axes[1].plot(x_stability, stability_high, 'g-', linewidth=2, 
+                    label=f'High ({stability_params["p50"]:.2f}-{stability_params["p75"]:.2f}-{stability_params["p100"]:.2f})')
         
         axes[1].set_xlabel('Usage Stability')
         axes[1].set_ylabel('Membership Degree')
-        axes[1].set_title('Usage Stability Membership Functions')
+        axes[1].set_title('Usage Stability (Statistical Percentiles)')
         axes[1].legend()
         axes[1].grid(True, alpha=0.3)
         axes[1].set_xlim(0, 1)
         axes[1].set_ylim(0, 1.1)
         
-        # 標記關鍵點
-        axes[1].axvline(0.2, color='gray', linestyle='--', alpha=0.5)
-        axes[1].axvline(0.4, color='gray', linestyle='--', alpha=0.5)
-        axes[1].axvline(0.6, color='gray', linestyle='--', alpha=0.5)
-        axes[1].axvline(0.8, color='gray', linestyle='--', alpha=0.5)
-        axes[1].axvline(0.9, color='gray', linestyle='--', alpha=0.5)
+        # 標記百分位數線
+        for percentile in [stability_params['p25'], stability_params['p50'], stability_params['p75']]:
+            axes[1].axvline(percentile, color='gray', linestyle='--', alpha=0.5)
         
         # 3. Time Factor 隸屬函數
         x_time = np.linspace(0, 1, 1000)
+        time_params = self.membership_parameters['time_factor']
         
-        time_non_use = self.triangular_membership(x_time, 0, 0.15, 0.3)
-        time_possible = self.triangular_membership(x_time, 0.3, 0.5, 0.7)
-        time_peak = self.triangular_membership(x_time, 0.7, 0.85, 1.0)
+        time_non_use = self.triangular_membership(x_time, time_params['p0'], time_params['p25'], time_params['p50'])
+        time_possible = self.triangular_membership(x_time, time_params['p25'], time_params['p50'], time_params['p75'])
+        time_peak = self.triangular_membership(x_time, time_params['p50'], time_params['p75'], time_params['p100'])
         
-        axes[2].plot(x_time, time_non_use, 'r-', linewidth=2, label='Non-use (0-0.15-0.3)')
-        axes[2].plot(x_time, time_possible, 'orange', linewidth=2, label='Possible (0.3-0.5-0.7)')
-        axes[2].plot(x_time, time_peak, 'g-', linewidth=2, label='Peak (0.7-0.85-1.0)')
+        axes[2].plot(x_time, time_non_use, 'r-', linewidth=2, 
+                    label=f'Non-use ({time_params["p0"]:.2f}-{time_params["p25"]:.2f}-{time_params["p50"]:.2f})')
+        axes[2].plot(x_time, time_possible, 'orange', linewidth=2, 
+                    label=f'Possible ({time_params["p25"]:.2f}-{time_params["p50"]:.2f}-{time_params["p75"]:.2f})')
+        axes[2].plot(x_time, time_peak, 'g-', linewidth=2, 
+                    label=f'Peak ({time_params["p50"]:.2f}-{time_params["p75"]:.2f}-{time_params["p100"]:.2f})')
         
         axes[2].set_xlabel('Time Factor (Usage Rate)')
         axes[2].set_ylabel('Membership Degree')
-        axes[2].set_title('Time Factor Membership Functions')
+        axes[2].set_title('Time Factor (Statistical Percentiles)')
         axes[2].legend()
         axes[2].grid(True, alpha=0.3)
         axes[2].set_xlim(0, 1)
         axes[2].set_ylim(0, 1.1)
         
-        # 標記關鍵點
-        axes[2].axvline(0.15, color='gray', linestyle='--', alpha=0.5)
-        axes[2].axvline(0.3, color='gray', linestyle='--', alpha=0.5)
-        axes[2].axvline(0.5, color='gray', linestyle='--', alpha=0.5)
-        axes[2].axvline(0.7, color='gray', linestyle='--', alpha=0.5)
-        axes[2].axvline(0.85, color='gray', linestyle='--', alpha=0.5)
+        # 標記百分位數線
+        for percentile in [time_params['p25'], time_params['p50'], time_params['p75']]:
+            axes[2].axvline(percentile, color='gray', linestyle='--', alpha=0.5)
         
         plt.tight_layout()
         plt.show()
         
         # 顯示隸屬函數的數值定義
-        print("\nMembership Function Definitions:")
-        print("="*40)
+        print("\nStatistical Membership Function Definitions:")
+        print("="*50)
         print("Usage Probability:")
-        print("  Low:    triangular(x, 0, 0.15, 0.3)")
-        print("  Medium: triangular(x, 0.3, 0.5, 0.7)")
-        print("  High:   triangular(x, 0.7, 0.85, 1.0)")
+        print(f"  Low:    triangular(x, {usage_params['p0']:.3f}, {usage_params['p25']:.3f}, {usage_params['p50']:.3f})")
+        print(f"  Medium: triangular(x, {usage_params['p25']:.3f}, {usage_params['p50']:.3f}, {usage_params['p75']:.3f})")
+        print(f"  High:   triangular(x, {usage_params['p50']:.3f}, {usage_params['p75']:.3f}, {usage_params['p100']:.3f})")
         print("\nUsage Stability:")
-        print("  Low:    triangular(x, 0, 0.2, 0.4)")
-        print("  Medium: triangular(x, 0.4, 0.6, 0.8)")
-        print("  High:   triangular(x, 0.8, 0.9, 1.0)")
+        print(f"  Low:    triangular(x, {stability_params['p0']:.3f}, {stability_params['p25']:.3f}, {stability_params['p50']:.3f})")
+        print(f"  Medium: triangular(x, {stability_params['p25']:.3f}, {stability_params['p50']:.3f}, {stability_params['p75']:.3f})")
+        print(f"  High:   triangular(x, {stability_params['p50']:.3f}, {stability_params['p75']:.3f}, {stability_params['p100']:.3f})")
         print("\nTime Factor:")
-        print("  Non-use:  triangular(x, 0, 0.15, 0.3)")
-        print("  Possible: triangular(x, 0.3, 0.5, 0.7)")
-        print("  Peak:     triangular(x, 0.7, 0.85, 1.0)")
-    
+        print(f"  Non-use:  triangular(x, {time_params['p0']:.3f}, {time_params['p25']:.3f}, {time_params['p50']:.3f})")
+        print(f"  Possible: triangular(x, {time_params['p25']:.3f}, {time_params['p50']:.3f}, {time_params['p75']:.3f})")
+        print(f"  Peak:     triangular(x, {time_params['p50']:.3f}, {time_params['p75']:.3f}, {time_params['p100']:.3f})")
+
+        
     def get_habit_score(self, timestamp):
         """外部調用介面"""
         result = self.calculate_habit_score(timestamp)
@@ -1223,6 +1350,73 @@ class UserHabitScoreModule:
         plt.tight_layout()
         plt.show()
     
+    def analyze_data_distribution(self):
+        """分析數據分布，找出問題所在"""
+        print("==== Analyzing Data Distribution ====")
+        
+        # 收集所有數據
+        usage_probs = []
+        stabilities = []
+        time_factors = []
+        
+        for day_type in ['weekday', 'weekend']:
+            for time_slot in range(self.time_slots):
+                if (day_type, time_slot) in self.usage_probability_matrix:
+                    prob = self.usage_probability_matrix[(day_type, time_slot)]['short_prob']
+                    usage_probs.append(prob)
+                
+                if (day_type, time_slot) in self.stability_matrix:
+                    stability = self.stability_matrix[(day_type, time_slot)]['overall_stability']
+                    stabilities.append(stability)
+                
+                if (day_type, time_slot) in self.time_factor_matrix:
+                    time_factor = self.time_factor_matrix[(day_type, time_slot)]['weighted_usage_rate']
+                    time_factors.append(time_factor)
+        
+        # 分析 Usage Probability
+        print("\nUsage Probability Analysis:")
+        print(f"  Total values: {len(usage_probs)}")
+        print(f"  Unique values: {len(set(usage_probs))}")
+        print(f"  Most common values:")
+        
+        from collections import Counter
+        counter = Counter(usage_probs)
+        for value, count in counter.most_common(5):
+            percentage = count / len(usage_probs) * 100
+            print(f"    {value:.3f}: {count} times ({percentage:.1f}%)")
+        
+        if len(usage_probs) > 0:
+            print(f"  Min: {min(usage_probs):.3f}")
+            print(f"  Max: {max(usage_probs):.3f}")
+            print(f"  Mean: {np.mean(usage_probs):.3f}")
+            print(f"  Std: {np.std(usage_probs):.3f}")
+        
+        # 繪製分布圖
+        fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+        
+        if usage_probs:
+            axes[0].hist(usage_probs, bins=20, alpha=0.7, color='blue')
+            axes[0].set_title('Usage Probability Distribution')
+            axes[0].set_xlabel('Value')
+            axes[0].set_ylabel('Frequency')
+        
+        if stabilities:
+            axes[1].hist(stabilities, bins=20, alpha=0.7, color='green')
+            axes[1].set_title('Stability Distribution')
+            axes[1].set_xlabel('Value')
+            axes[1].set_ylabel('Frequency')
+        
+        if time_factors:
+            axes[2].hist(time_factors, bins=20, alpha=0.7, color='orange')
+            axes[2].set_title('Time Factor Distribution')
+            axes[2].set_xlabel('Value')
+            axes[2].set_ylabel('Frequency')
+        
+        plt.tight_layout()
+        plt.show()
+        
+        return usage_probs, stabilities, time_factors
+
     def run_complete_analysis(self, usage_file_path):
         """運行完整的使用習慣分析"""
         print("="*80)
@@ -1241,6 +1435,8 @@ class UserHabitScoreModule:
         self.calculate_usage_probability()
         self.calculate_usage_stability(df)
         self.calculate_time_factor(df)
+
+        self.calculate_membership_parameters()
         
         # 定義模糊規則
         self.define_habit_rules()
@@ -1267,6 +1463,8 @@ class UserHabitScoreModule:
         
         # 創建視覺化
         self.visualize_habit_analysis()
+
+        self.analyze_data_distribution()
         
         print("="*80)
         print("USER HABIT SCORE ANALYSIS COMPLETE")

@@ -194,7 +194,11 @@ def unequal_interval_plot(df):
     plt.tight_layout()
     plt.show()
 
-def quick_find_outliers(df, missing_data_file='missing_times.txt', fuzzy_data_file='fuzzy_input.csv', threshold_seconds=1800):
+
+def quick_find_outliers(df, threshold_seconds=1800):
+    import pandas as pd
+    from datetime import timedelta
+    
     print('\n==== outliers ====')
     
     large_gaps = df[df['time_diff_seconds'] > threshold_seconds]
@@ -205,91 +209,50 @@ def quick_find_outliers(df, missing_data_file='missing_times.txt', fuzzy_data_fi
     
     print(f"found {len(large_gaps)} interval outliers:")
     
-    # Collect all missing time points
-    missing_times = []
-    
-    # Collect data for fuzzy logic
-    fuzzy_data = []
+    # 用來統計各時間點出現次數的字典
+    time_count = {}
     
     for idx, row in large_gaps.iterrows():
-        minutes = row['time_diff_seconds'] / 60  # Convert to minutes
-        
-        print(f"\noutlier index {idx} - interval {minutes:.1f}min:")
-        print("-" * 50)
-        
         if idx-1 >= 0 and idx-1 in df.index:
-            prev_data = df.loc[idx-1]
-            prev_minutes = prev_data['time_diff_seconds'] / 60 if pd.notna(prev_data['time_diff_seconds']) else 0
-            print(f"index {idx-1}: {prev_data['timestamp']} - power {prev_data['power']:.2f}W - interval {prev_minutes:.1f}min")
-
-        print(f"index {idx}: {row['timestamp']} - power {row['power']:.2f}W - interval {minutes:.1f}min >>> outlier")
-         
-        if idx+1 < len(df) and idx+1 in df.index:
-            next_data = df.loc[idx+1]
-            next_minutes = next_data['time_diff_seconds'] / 60 if pd.notna(next_data['time_diff_seconds']) else 0
-            print(f"index {idx+1}: {next_data['timestamp']} - power {next_data['power']:.2f}W - interval {next_minutes:.1f}min")
-        
-        # Calculate missing time points
-        missing_count = 0
-        power_before = None
-        power_after = row['power']
-        
-        if idx-1 >= 0 and idx-1 in df.index:
-            start_time = pd.to_datetime(df.loc[idx-1]['timestamp'])
-            end_time = pd.to_datetime(row['timestamp'])
-            power_before = df.loc[idx-1]['power']
+            start_time = df.loc[idx-1, 'timestamp']
+            end_time = row['timestamp']
             
-            # Assume normal interval is 15 minutes, find missing time points in between
+            # 確保是 datetime 格式
+            if not isinstance(start_time, pd.Timestamp):
+                start_time = pd.to_datetime(start_time)
+            if not isinstance(end_time, pd.Timestamp):
+                end_time = pd.to_datetime(end_time)
+            
+            # 計算缺失的時間點（假設正常間隔是15分鐘）
             current_time = start_time + timedelta(minutes=15)
             while current_time < end_time:
-                missing_times.append(current_time.strftime('%Y-%m-%d %H:%M'))
-                missing_count += 1
+                time_str = current_time.strftime('%H:%M')
+                
+                # 統計這個時間點出現的次數
+                if time_str in time_count:
+                    time_count[time_str] += 1
+                else:
+                    time_count[time_str] = 1
+                    
                 current_time += timedelta(minutes=15)
-            
-            # Collect fuzzy logic data
-            power_change = abs(power_after - power_before) if power_before is not None else 0
-            power_change_ratio = power_change / max(power_before, 1) if power_before is not None else 0
-            
-            fuzzy_record = {
-                'gap_index': idx,
-                'gap_start_time': start_time.strftime('%Y-%m-%d %H:%M'),
-                'gap_end_time': end_time.strftime('%Y-%m-%d %H:%M'),
-                'gap_duration_minutes': minutes,
-                'missing_records_count': missing_count,
-                'power_before': power_before,
-                'power_after': power_after,
-                'power_change': round(power_change, 2),
-                'power_change_ratio': round(power_change_ratio, 3),
-                'flag': 1  # Simple flag to indicate data gap
-            }
-            fuzzy_data.append(fuzzy_record)
+    
+    # 按時間順序排序並顯示統計結果
+    if time_count:
+        print('\nmissing time point statistics:')
+        sorted_times = sorted(time_count.items())
+        for time_str, count in sorted_times:
+            print(f"{time_str}: {count}counts")
         
-        print()
-    
-    # Output missing time points to file
-    if missing_times:
-        with open(missing_data_file, 'w', encoding='utf-8') as f:
-            f.write("Missing data time points:\n")
-            f.write("=" * 30 + "\n")
-            for i, missing_time in enumerate(missing_times, 1):
-                f.write(f"{i}. {missing_time}\n")
-                print(f"Missing: {missing_time}")
+        print(f'\ total: {sum(time_count.values())}counts of missing data')
+        print(f'time points: {len(time_count)}counts of time points')
         
-        print(f"\nTotal missing records: {len(missing_times)}")
-        print(f"Missing time points saved to: {missing_data_file}")
+        # 匯出CSV檔案
+        time_stats_df = pd.DataFrame(sorted_times, columns=['time', 'missing_time'])
+        csv_filename = 'missing_time_statistics.csv'
+        time_stats_df.to_csv(csv_filename, index=False, encoding='utf-8-sig')
+        print(f'\n missing data saved to : {csv_filename}')
     
-    # Output fuzzy logic data to CSV file
-    if fuzzy_data:
-        fuzzy_df = pd.DataFrame(fuzzy_data)
-        fuzzy_df.to_csv(fuzzy_data_file, index=False)
-        print(f"Fuzzy logic data saved to: {fuzzy_data_file}")
-        print(f"Fuzzy data summary:")
-        print(f"  - Total gaps: {len(fuzzy_data)}")
-        print(f"  - Average gap duration: {fuzzy_df['gap_duration_minutes'].mean():.1f} min")
-        print(f"  - Total missing records: {fuzzy_df['missing_records_count'].sum()}")
-        print(f"  - All gaps flagged: {fuzzy_df['flag'].sum()}")
-    
-    return missing_times, fuzzy_data
+    return large_gaps
 
 #output file
 def save_data_csv(df, output_path='data_after_preprocessing.csv'):
@@ -299,7 +262,7 @@ def save_data_csv(df, output_path='data_after_preprocessing.csv'):
     output_columns = [
         'timestamp', 'date', 
         'power', 'power_state', 'is_phantom_load', 'is_off', 'is_on', 
-        'is_light_use', 'is_regular_use', 'time_diff_seconds', 'outlier_flag'
+        'is_light_use', 'is_regular_use', 'time_diff_seconds'
     ]
 
     # Only include columns that exist in the DataFrame
@@ -314,7 +277,7 @@ def save_data_csv(df, output_path='data_after_preprocessing.csv'):
 
 if __name__ == "__main__":
 
-    file_path = 'C:/Users/王俞文/Documents/glasgow/msc project/data/6CL-S8 television 30days_15min.csv'
+    file_path = 'C:/Users/王俞文/Documents/glasgow/msc project/data/6CL-S8 television 15min.csv'
 
     print('====================== data preprocessing ======================')
 

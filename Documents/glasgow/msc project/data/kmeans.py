@@ -142,13 +142,15 @@ def plot_kmeans_power(df):
     ax1 = axes[0, 0]
 
     categories = df['power_category'].unique()
-    colors = ['red', 'green', 'blue', 'orange', 'purple']
+    colors = ['orange', 'lightblue', 'lightgreen']
+
+    color_map = {cat: colors[i % len(colors)] for i, cat in enumerate(categories)}
 
     for category in df['power_category'].unique():
         if category != 'non use':
             data = df[df['power_category'] == category]['power']
             if len(data) > 0:
-                ax1.hist(data, alpha=0.6, label=category, bins=15)
+                ax1.hist(data, alpha=0.6, label=category, bins=15, color=color_map[category])
     ax1.set_xlabel('power (W)')
     ax1.set_ylabel('times')
     ax1.set_title('power distribution')
@@ -178,7 +180,7 @@ def plot_kmeans_power(df):
         bp = ax3.boxplot(nonzero_data, labels=nonzero_categories, patch_artist=True)
         
         # Set colors
-        box_colors = ['lightgreen', 'lightblue', 'orange']
+        box_colors = ['orange', 'lightblue', 'lightgreen' ]
         for patch, color in zip(bp['boxes'], box_colors):
             patch.set_facecolor(color)
     
@@ -313,7 +315,7 @@ def plot_power_classification(df):
 
 if __name__ == "__main__":
     # file_path ='C:/Users/王俞文/Documents/glasgow/msc project/data/data_after_preprocessing.csv'
-    file_path = 'C:/Users/王俞文/Documents/glasgow/msc project/data/6CL-S8 television 30days_15min.csv'
+    file_path = 'C:/Users/王俞文/Documents/glasgow/msc project/data/6CL-S8 television 15min.csv'
 
     df = read_file(file_path)
 
