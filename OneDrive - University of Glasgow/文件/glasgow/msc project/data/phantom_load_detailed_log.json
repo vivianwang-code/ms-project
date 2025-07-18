@@ -1,0 +1,2742 @@
+[
+  {
+    "monitor_count": 1,
+    "monitor_time": "2025-07-16 23:31:16",
+    "data_time": "2025-07-16T22:30:17.973000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.11206314242190718,
+      "habit": 0.2955303798939517,
+      "confidence": 0.16931456869115089
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 0.9835914833333333,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 2,
+    "monitor_time": "2025-07-16 23:46:16",
+    "data_time": "2025-07-16T22:45:11.468000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.13278090889634014,
+      "habit": 0.2955303798939517,
+      "confidence": 0.11451611509860132
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.0959778,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 3,
+    "monitor_time": "2025-07-17 00:01:17",
+    "data_time": "2025-07-16T22:45:11.468000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.13278090889634014,
+      "habit": 0.2955303798939517,
+      "confidence": 0.11451611509860132
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 16.100152366666666,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 5,
+    "monitor_time": "2025-07-17 00:31:17",
+    "data_time": "2025-07-16T23:30:33.269000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.13989905530340996
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 0.7520653333333333,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 6,
+    "monitor_time": "2025-07-17 00:46:18",
+    "data_time": "2025-07-16T23:45:03.618000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.1
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.2537551833333334,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 7,
+    "monitor_time": "2025-07-17 01:01:18",
+    "data_time": "2025-07-16T23:45:03.618000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.1
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 16.259605283333332,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 8,
+    "monitor_time": "2025-07-17 01:16:19",
+    "data_time": "2025-07-17T00:15:29.023000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.15727525336801432
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 0.8404823833333332,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 9,
+    "monitor_time": "2025-07-17 01:31:19",
+    "data_time": "2025-07-17T00:30:05.221000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.1855557912035174
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.2410351333333334,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 10,
+    "monitor_time": "2025-07-17 01:46:19",
+    "data_time": "2025-07-17T00:45:15.778000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.22416932295912
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.0694672833333334,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 11,
+    "monitor_time": "2025-07-17 02:01:19",
+    "data_time": "2025-07-17T01:00:17.289000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.12998106875082654
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.04918455,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 12,
+    "monitor_time": "2025-07-17 02:16:20",
+    "data_time": "2025-07-17T01:15:03.849000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.24250263091945917
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.2817022833333334,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 13,
+    "monitor_time": "2025-07-17 02:31:20",
+    "data_time": "2025-07-17T01:30:11.464000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.27566498034326825
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.1594180666666667,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 14,
+    "monitor_time": "2025-07-17 02:46:21",
+    "data_time": "2025-07-17T01:45:20.793000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.2374932439347527
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.0076473833333333,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 15,
+    "monitor_time": "2025-07-17 03:01:21",
+    "data_time": "2025-07-17T01:59:51.298000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.2374932439347527
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.50310795,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 16,
+    "monitor_time": "2025-07-17 03:16:21",
+    "data_time": "2025-07-17T02:15:21.223000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.2884023363891124
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.0124921333333332,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 17,
+    "monitor_time": "2025-07-17 03:31:21",
+    "data_time": "2025-07-17T02:30:15.623000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.17481631137779116
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.11376325,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 18,
+    "monitor_time": "2025-07-17 03:46:22",
+    "data_time": "2025-07-17T02:45:14.064000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.20356685850199074
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.1479065166666667,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 19,
+    "monitor_time": "2025-07-17 04:01:22",
+    "data_time": "2025-07-17T03:00:20.095000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.18579589918874267
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.0553439,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 20,
+    "monitor_time": "2025-07-17 04:16:23",
+    "data_time": "2025-07-17T03:00:20.095000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.18579589918874267
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 16.060412033333332,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 22,
+    "monitor_time": "2025-07-17 04:46:24",
+    "data_time": "2025-07-17T03:45:07.765000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.16222473623118813
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.2796689333333333,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 23,
+    "monitor_time": "2025-07-17 05:01:24",
+    "data_time": "2025-07-17T04:00:03.140000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.12526938345681304
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.3617151166666666,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 24,
+    "monitor_time": "2025-07-17 05:16:24",
+    "data_time": "2025-07-17T04:15:14.801000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.14132182651409905
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.1718705333333332,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 25,
+    "monitor_time": "2025-07-17 05:31:25",
+    "data_time": "2025-07-17T04:30:07.945000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.21769948430730718
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.2949372166666668,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 26,
+    "monitor_time": "2025-07-17 05:46:25",
+    "data_time": "2025-07-17T04:45:12.915000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.11983491948122221
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.2170868333333333,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 27,
+    "monitor_time": "2025-07-17 06:01:25",
+    "data_time": "2025-07-17T04:45:12.915000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.11983491948122221
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 16.221667283333332,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 28,
+    "monitor_time": "2025-07-17 06:16:26",
+    "data_time": "2025-07-17T05:15:13.296000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.11785737887798485
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.2204335,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 29,
+    "monitor_time": "2025-07-17 06:31:26",
+    "data_time": "2025-07-17T05:15:13.296000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.11785737887798485
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 16.229171916666665,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 30,
+    "monitor_time": "2025-07-17 06:46:27",
+    "data_time": "2025-07-17T05:44:51.350000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.1940935201032849
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.5993838999999999,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 31,
+    "monitor_time": "2025-07-17 07:01:27",
+    "data_time": "2025-07-17T06:00:06.723000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Send Notification",
+    "decision": "send_notification",
+    "scores": {
+      "activity": 0.4051843108265814,
+      "habit": 0.2955303798939517,
+      "confidence": 0.5775764366723083
+    },
+    "levels": {
+      "activity": "medium",
+      "habit": "low",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.3475873999999999,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 32,
+    "monitor_time": "2025-07-17 07:16:27",
+    "data_time": "2025-07-17T06:15:00.671000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Send Notification",
+    "decision": "send_notification",
+    "scores": {
+      "activity": 0.39790480470620154,
+      "habit": 0.2955303798939517,
+      "confidence": 0.4823997248003925
+    },
+    "levels": {
+      "activity": "medium",
+      "habit": "low",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.4532814833333334,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 33,
+    "monitor_time": "2025-07-17 07:31:27",
+    "data_time": "2025-07-17T06:29:57.098000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Send Notification",
+    "decision": "send_notification",
+    "scores": {
+      "activity": 0.39790480470620154,
+      "habit": 0.2955303798939517,
+      "confidence": 0.4823997248003925
+    },
+    "levels": {
+      "activity": "medium",
+      "habit": "low",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.5206226666666667,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 34,
+    "monitor_time": "2025-07-17 07:46:28",
+    "data_time": "2025-07-17T06:45:07.182000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Send Notification",
+    "decision": "send_notification",
+    "scores": {
+      "activity": 0.4650885245901639,
+      "habit": 0.2955303798939517,
+      "confidence": 0.437304696506023
+    },
+    "levels": {
+      "activity": "medium",
+      "habit": "low",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.35658865,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 35,
+    "monitor_time": "2025-07-17 08:01:28",
+    "data_time": "2025-07-17T07:00:23.100000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Send Notification",
+    "decision": "send_notification",
+    "scores": {
+      "activity": 0.46443231750531544,
+      "habit": 0.2955303798939517,
+      "confidence": 0.49762000787512745
+    },
+    "levels": {
+      "activity": "medium",
+      "habit": "low",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.0982469666666668,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 36,
+    "monitor_time": "2025-07-17 08:16:29",
+    "data_time": "2025-07-17T07:15:05.302000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Send Notification",
+    "decision": "send_notification",
+    "scores": {
+      "activity": 0.42523866193210796,
+      "habit": 0.2955303798939517,
+      "confidence": 0.4908163386135182
+    },
+    "levels": {
+      "activity": "medium",
+      "habit": "low",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.4027773166666668,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 37,
+    "monitor_time": "2025-07-17 08:31:29",
+    "data_time": "2025-07-17T07:29:56.854000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Send Notification",
+    "decision": "send_notification",
+    "scores": {
+      "activity": 0.42523866193210796,
+      "habit": 0.2955303798939517,
+      "confidence": 0.4908163386135182
+    },
+    "levels": {
+      "activity": "medium",
+      "habit": "low",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.5473628,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 38,
+    "monitor_time": "2025-07-17 08:46:29",
+    "data_time": "2025-07-17T07:45:08.922000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Send Notification",
+    "decision": "send_notification",
+    "scores": {
+      "activity": 0.3956403984632095,
+      "habit": 0.2955303798939517,
+      "confidence": 0.5561485905242077
+    },
+    "levels": {
+      "activity": "medium",
+      "habit": "low",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.3504915333333334,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 39,
+    "monitor_time": "2025-07-17 09:01:29",
+    "data_time": "2025-07-17T08:00:23.473000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Send Notification",
+    "decision": "send_notification",
+    "scores": {
+      "activity": 0.46203137383881254,
+      "habit": 0.44603287559041127,
+      "confidence": 0.5698920058743744
+    },
+    "levels": {
+      "activity": "medium",
+      "habit": "medium",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.1122519166666665,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 40,
+    "monitor_time": "2025-07-17 09:16:30",
+    "data_time": "2025-07-17T08:15:06.412000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Send Notification",
+    "decision": "send_notification",
+    "scores": {
+      "activity": 0.45898656776263036,
+      "habit": 0.41568117277205746,
+      "confidence": 0.5888987370268515
+    },
+    "levels": {
+      "activity": "medium",
+      "habit": "medium",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.4026438333333333,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 41,
+    "monitor_time": "2025-07-17 09:31:30",
+    "data_time": "2025-07-17T08:30:15.764000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.24,
+      "habit": 0.4966503243328474,
+      "confidence": 0.48316359028938677
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.2521826500000002,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 42,
+    "monitor_time": "2025-07-17 09:46:30",
+    "data_time": "2025-07-17T08:45:14.096000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Send Notification",
+    "decision": "send_notification",
+    "scores": {
+      "activity": 0.4612144612144612,
+      "habit": 0.41101630836724884,
+      "confidence": 0.5718744138851799
+    },
+    "levels": {
+      "activity": "medium",
+      "habit": "medium",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.2841887666666667,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 43,
+    "monitor_time": "2025-07-17 10:01:31",
+    "data_time": "2025-07-17T09:00:31.296000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.1140969169402524,
+      "habit": 0.5086642605323012,
+      "confidence": 0.3224681580211701
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.0041620333333332,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 44,
+    "monitor_time": "2025-07-17 10:16:31",
+    "data_time": "2025-07-17T09:00:31.296000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.1140969169402524,
+      "habit": 0.5086642605323012,
+      "confidence": 0.3224681580211701
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 16.0080775,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 46,
+    "monitor_time": "2025-07-17 10:46:32",
+    "data_time": "2025-07-17T09:45:10.823000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.09863218605721519,
+      "habit": 0.5228971858612854,
+      "confidence": 0.2551881634717639
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.3594224166666666,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 47,
+    "monitor_time": "2025-07-17 11:01:32",
+    "data_time": "2025-07-17T10:00:23.009000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.09884679441595869,
+      "habit": 0.5143852570049158,
+      "confidence": 0.21442965350286344
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.1636175333333334,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 48,
+    "monitor_time": "2025-07-17 11:16:32",
+    "data_time": "2025-07-17T10:15:03.973000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.09931818181818182,
+      "habit": 0.5560990470310608,
+      "confidence": 0.28846269538667346
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.4884105833333334,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 49,
+    "monitor_time": "2025-07-17 11:31:33",
+    "data_time": "2025-07-17T10:30:21.683000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.10715850258861012,
+      "habit": 0.5629899670144313,
+      "confidence": 0.3933867210981181
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.2009320833333335,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 50,
+    "monitor_time": "2025-07-17 11:46:33",
+    "data_time": "2025-07-17T10:45:21.218000+00:00",
+    "power_w": 28.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.1396595560377958,
+      "habit": 0.5573673595541199,
+      "confidence": 0.4054754507310222
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.2124563166666666,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 51,
+    "monitor_time": "2025-07-17 12:01:33",
+    "data_time": "2025-07-17T10:59:54.736000+00:00",
+    "power_w": 12.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.1396595560377958,
+      "habit": 0.5573673595541199,
+      "confidence": 0.4054754507310222
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.6608052666666666,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 52,
+    "monitor_time": "2025-07-17 12:16:34",
+    "data_time": "2025-07-17T11:15:14.508000+00:00",
+    "power_w": 10.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.1038793103448276,
+      "habit": 0.5258447868606902,
+      "confidence": 0.22877835281068323
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.3395557833333334,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 53,
+    "monitor_time": "2025-07-17 12:31:34",
+    "data_time": "2025-07-17T11:29:58.703000+00:00",
+    "power_w": 12.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.1038793103448276,
+      "habit": 0.5258447868606902,
+      "confidence": 0.22877835281068323
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.6105710666666666,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 54,
+    "monitor_time": "2025-07-17 12:46:35",
+    "data_time": "2025-07-17T11:44:54.025000+00:00",
+    "power_w": 71.0,
+    "type": "normal_usage",
+    "action": "No Action",
+    "decision": "",
+    "scores": {},
+    "levels": {},
+    "professional_percentage": 0,
+    "model_sources": {},
+    "data_age_minutes": 1.69299435,
+    "reason": "Power 71.0W ≥ 36.9W, within normal usage range",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 55,
+    "monitor_time": "2025-07-17 13:01:35",
+    "data_time": "2025-07-17T12:00:02.496000+00:00",
+    "power_w": 61.0,
+    "type": "normal_usage",
+    "action": "No Action",
+    "decision": "",
+    "scores": {},
+    "levels": {},
+    "professional_percentage": 0,
+    "model_sources": {},
+    "data_age_minutes": 1.5558540333333333,
+    "reason": "Power 61.0W ≥ 36.9W, within normal usage range",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 56,
+    "monitor_time": "2025-07-17 13:16:35",
+    "data_time": "2025-07-17T12:15:01.527000+00:00",
+    "power_w": 47.0,
+    "type": "normal_usage",
+    "action": "No Action",
+    "decision": "",
+    "scores": {},
+    "levels": {},
+    "professional_percentage": 0,
+    "model_sources": {},
+    "data_age_minutes": 1.5764038166666665,
+    "reason": "Power 47.0W ≥ 36.9W, within normal usage range",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 57,
+    "monitor_time": "2025-07-17 13:31:36",
+    "data_time": "2025-07-17T12:30:06.213000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.15955056179775284,
+      "habit": 0.4726647150931476,
+      "confidence": 0.4090550366755158
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.50539505,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 58,
+    "monitor_time": "2025-07-17 13:46:36",
+    "data_time": "2025-07-17T12:45:17.020000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.17235955056179778,
+      "habit": 0.5259496901868904,
+      "confidence": 0.5569360519696028
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.3305702833333333,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 59,
+    "monitor_time": "2025-07-17 14:01:36",
+    "data_time": "2025-07-17T13:00:13.830000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.1616806722689076,
+      "habit": 0.48640086565517876,
+      "confidence": 0.5045104565299855
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.38796195,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 60,
+    "monitor_time": "2025-07-17 14:16:37",
+    "data_time": "2025-07-17T13:15:04.298000+00:00",
+    "power_w": 50.0,
+    "type": "normal_usage",
+    "action": "No Action",
+    "decision": "",
+    "scores": {},
+    "levels": {},
+    "professional_percentage": 0,
+    "model_sources": {},
+    "data_age_minutes": 1.55143565,
+    "reason": "Power 50.0W ≥ 36.9W, within normal usage range",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 61,
+    "monitor_time": "2025-07-17 14:31:37",
+    "data_time": "2025-07-17T13:30:15.116000+00:00",
+    "power_w": 45.0,
+    "type": "normal_usage",
+    "action": "No Action",
+    "decision": "",
+    "scores": {},
+    "levels": {},
+    "professional_percentage": 0,
+    "model_sources": {},
+    "data_age_minutes": 1.3758601000000001,
+    "reason": "Power 45.0W ≥ 36.9W, within normal usage range",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 62,
+    "monitor_time": "2025-07-17 14:46:37",
+    "data_time": "2025-07-17T13:45:25.534000+00:00",
+    "power_w": 60.0,
+    "type": "normal_usage",
+    "action": "No Action",
+    "decision": "",
+    "scores": {},
+    "levels": {},
+    "professional_percentage": 0,
+    "model_sources": {},
+    "data_age_minutes": 1.2071095333333333,
+    "reason": "Power 60.0W ≥ 36.9W, within normal usage range",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 63,
+    "monitor_time": "2025-07-17 15:01:38",
+    "data_time": "2025-07-17T14:00:18.032000+00:00",
+    "power_w": 63.0,
+    "type": "normal_usage",
+    "action": "No Action",
+    "decision": "",
+    "scores": {},
+    "levels": {},
+    "professional_percentage": 0,
+    "model_sources": {},
+    "data_age_minutes": 1.3403013166666669,
+    "reason": "Power 63.0W ≥ 36.9W, within normal usage range",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 64,
+    "monitor_time": "2025-07-17 15:16:38",
+    "data_time": "2025-07-17T14:14:59.294000+00:00",
+    "power_w": 39.0,
+    "type": "normal_usage",
+    "action": "No Action",
+    "decision": "",
+    "scores": {},
+    "levels": {},
+    "professional_percentage": 0,
+    "model_sources": {},
+    "data_age_minutes": 1.6620562833333332,
+    "reason": "Power 39.0W ≥ 36.9W, within normal usage range",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 65,
+    "monitor_time": "2025-07-17 15:31:39",
+    "data_time": "2025-07-17T14:30:08.492000+00:00",
+    "power_w": 38.0,
+    "type": "normal_usage",
+    "action": "No Action",
+    "decision": "",
+    "scores": {},
+    "levels": {},
+    "professional_percentage": 0,
+    "model_sources": {},
+    "data_age_minutes": 1.51437035,
+    "reason": "Power 38.0W ≥ 36.9W, within normal usage range",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 66,
+    "monitor_time": "2025-07-17 15:46:39",
+    "data_time": "2025-07-17T14:45:19.955000+00:00",
+    "power_w": 29.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.15909409646546008,
+      "habit": 0.5683969560002288,
+      "confidence": 0.5625504710265392
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.329035,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 67,
+    "monitor_time": "2025-07-17 16:01:39",
+    "data_time": "2025-07-17T15:00:08.588000+00:00",
+    "power_w": 29.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.10546875000000001,
+      "habit": 0.557903061931459,
+      "confidence": 0.3410964538391579
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.52587075,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 68,
+    "monitor_time": "2025-07-17 16:16:40",
+    "data_time": "2025-07-17T15:15:13.098000+00:00",
+    "power_w": 48.0,
+    "type": "normal_usage",
+    "action": "No Action",
+    "decision": "",
+    "scores": {},
+    "levels": {},
+    "professional_percentage": 0,
+    "model_sources": {},
+    "data_age_minutes": 1.4569048166666667,
+    "reason": "Power 48.0W ≥ 36.9W, within normal usage range",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 69,
+    "monitor_time": "2025-07-17 16:31:40",
+    "data_time": "2025-07-17T15:30:11.493000+00:00",
+    "power_w": 65.0,
+    "type": "normal_usage",
+    "action": "No Action",
+    "decision": "",
+    "scores": {},
+    "levels": {},
+    "professional_percentage": 0,
+    "model_sources": {},
+    "data_age_minutes": 1.4918116333333333,
+    "reason": "Power 65.0W ≥ 36.9W, within normal usage range",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 70,
+    "monitor_time": "2025-07-17 16:46:41",
+    "data_time": "2025-07-17T15:45:05.902000+00:00",
+    "power_w": 34.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.10506644518272426,
+      "habit": 0.5452491409798966,
+      "confidence": 0.35493824545795305
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.5907863666666666,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 71,
+    "monitor_time": "2025-07-17 17:01:41",
+    "data_time": "2025-07-17T16:00:06.443000+00:00",
+    "power_w": 7.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.10381839635585315,
+      "habit": 0.5405582655010888,
+      "confidence": 0.16796736116223202
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.5861893,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 72,
+    "monitor_time": "2025-07-17 17:16:41",
+    "data_time": "2025-07-17T16:15:03.037000+00:00",
+    "power_w": 7.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.10407303370786518,
+      "habit": 0.5459282431343526,
+      "confidence": 0.2813141398521698
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.6488516166666665,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 73,
+    "monitor_time": "2025-07-17 17:31:42",
+    "data_time": "2025-07-17T16:30:13.149000+00:00",
+    "power_w": 7.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.2,
+      "habit": 0.4689500747998868,
+      "confidence": 0.2462199006364468
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.4846584,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 74,
+    "monitor_time": "2025-07-17 17:46:42",
+    "data_time": "2025-07-17T16:45:19.653000+00:00",
+    "power_w": 7.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.2,
+      "habit": 0.5171627457991712,
+      "confidence": 0.3013434537205497
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.3808813333333334,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 75,
+    "monitor_time": "2025-07-17 18:01:42",
+    "data_time": "2025-07-17T17:00:17.723000+00:00",
+    "power_w": 33.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.244859241126071,
+      "habit": 0.501732058854778,
+      "confidence": 0.31449464581241704
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.4203915999999999,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 76,
+    "monitor_time": "2025-07-17 18:16:43",
+    "data_time": "2025-07-17T17:15:12.126000+00:00",
+    "power_w": 23.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.2,
+      "habit": 0.4287311626067825,
+      "confidence": 0.1828299147237796
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.5208327,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 77,
+    "monitor_time": "2025-07-17 18:31:43",
+    "data_time": "2025-07-17T17:30:26.834000+00:00",
+    "power_w": 39.0,
+    "type": "normal_usage",
+    "action": "No Action",
+    "decision": "",
+    "scores": {},
+    "levels": {},
+    "professional_percentage": 0,
+    "model_sources": {},
+    "data_age_minutes": 1.28079805,
+    "reason": "Power 39.0W ≥ 36.9W, within normal usage range",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 78,
+    "monitor_time": "2025-07-17 18:46:43",
+    "data_time": "2025-07-17T17:45:09.087000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Delay Decision",
+    "decision": "delay_decision",
+    "scores": {
+      "activity": 0.383401209579086,
+      "habit": 0.41594293733694665,
+      "confidence": 0.2971701725933985
+    },
+    "levels": {
+      "activity": "medium",
+      "habit": "medium",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.5871069833333336,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 79,
+    "monitor_time": "2025-07-17 19:01:44",
+    "data_time": "2025-07-17T18:00:20.141000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Keep On",
+    "decision": "keep_on",
+    "scores": {
+      "activity": 0.7734640522875817,
+      "habit": 0.3811928690953527,
+      "confidence": 0.824491938729688
+    },
+    "levels": {
+      "activity": "high",
+      "habit": "medium",
+      "confidence": "high"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.4080751666666667,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 80,
+    "monitor_time": "2025-07-17 19:16:44",
+    "data_time": "2025-07-17T18:15:08.414000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Keep On",
+    "decision": "keep_on",
+    "scores": {
+      "activity": 0.7771108818485547,
+      "habit": 0.2955303798939517,
+      "confidence": 0.8752988751224651
+    },
+    "levels": {
+      "activity": "high",
+      "habit": "low",
+      "confidence": "high"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.6079218833333333,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 81,
+    "monitor_time": "2025-07-17 19:31:44",
+    "data_time": "2025-07-17T18:30:16.630000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Keep On",
+    "decision": "keep_on",
+    "scores": {
+      "activity": 0.7650610205440964,
+      "habit": 0.2955303798939517,
+      "confidence": 0.7898861131100341
+    },
+    "levels": {
+      "activity": "high",
+      "habit": "low",
+      "confidence": "high"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.4804801833333334,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 82,
+    "monitor_time": "2025-07-17 19:46:45",
+    "data_time": "2025-07-17T18:45:04.125000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Keep On",
+    "decision": "keep_on",
+    "scores": {
+      "activity": 0.7763439558961948,
+      "habit": 0.2955303798939517,
+      "confidence": 0.7726134835335638
+    },
+    "levels": {
+      "activity": "high",
+      "habit": "low",
+      "confidence": "high"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.694476,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 83,
+    "monitor_time": "2025-07-17 20:01:45",
+    "data_time": "2025-07-17T19:00:20.126000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Keep On",
+    "decision": "keep_on",
+    "scores": {
+      "activity": 0.7233123766230743,
+      "habit": 0.2955303798939517,
+      "confidence": 0.7447073133373072
+    },
+    "levels": {
+      "activity": "high",
+      "habit": "low",
+      "confidence": "high"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.43332525,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 84,
+    "monitor_time": "2025-07-17 20:16:46",
+    "data_time": "2025-07-17T19:15:16.494000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Keep On",
+    "decision": "keep_on",
+    "scores": {
+      "activity": 0.7772288602941176,
+      "habit": 0.2955303798939517,
+      "confidence": 0.8993828140480412
+    },
+    "levels": {
+      "activity": "high",
+      "habit": "low",
+      "confidence": "high"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.4993335166666666,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 85,
+    "monitor_time": "2025-07-17 20:31:46",
+    "data_time": "2025-07-17T19:30:12.019000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Keep On",
+    "decision": "keep_on",
+    "scores": {
+      "activity": 0.7813157894736843,
+      "habit": 0.2955303798939517,
+      "confidence": 0.9
+    },
+    "levels": {
+      "activity": "high",
+      "habit": "low",
+      "confidence": "high"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.5828400999999999,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 86,
+    "monitor_time": "2025-07-17 20:46:47",
+    "data_time": "2025-07-17T19:45:20.406000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Keep On",
+    "decision": "keep_on",
+    "scores": {
+      "activity": 0.7659411523490407,
+      "habit": 0.2955303798939517,
+      "confidence": 0.8771185684894145
+    },
+    "levels": {
+      "activity": "high",
+      "habit": "low",
+      "confidence": "high"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.4480903166666665,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 87,
+    "monitor_time": "2025-07-17 21:01:47",
+    "data_time": "2025-07-17T20:00:18.626000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Keep On",
+    "decision": "keep_on",
+    "scores": {
+      "activity": 0.6894321695059744,
+      "habit": 0.2955303798939517,
+      "confidence": 0.6880176165975774
+    },
+    "levels": {
+      "activity": "high",
+      "habit": "low",
+      "confidence": "high"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.4829171333333333,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 88,
+    "monitor_time": "2025-07-17 21:16:47",
+    "data_time": "2025-07-17T20:15:05.704000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Keep On",
+    "decision": "keep_on",
+    "scores": {
+      "activity": 0.7388528651877534,
+      "habit": 0.2955303798939517,
+      "confidence": 0.8636358787610012
+    },
+    "levels": {
+      "activity": "high",
+      "habit": "low",
+      "confidence": "high"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.7039449833333333,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 89,
+    "monitor_time": "2025-07-17 21:31:47",
+    "data_time": "2025-07-17T20:30:13.540000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Keep On",
+    "decision": "keep_on",
+    "scores": {
+      "activity": 0.780554763940344,
+      "habit": 0.2955303798939517,
+      "confidence": 0.8763615187009605
+    },
+    "levels": {
+      "activity": "high",
+      "habit": "low",
+      "confidence": "high"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.5813595999999999,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 90,
+    "monitor_time": "2025-07-17 21:46:48",
+    "data_time": "2025-07-17T20:45:20.604000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Keep On",
+    "decision": "keep_on",
+    "scores": {
+      "activity": 0.7778514222590445,
+      "habit": 0.2955303798939517,
+      "confidence": 0.8532869072661279
+    },
+    "levels": {
+      "activity": "high",
+      "habit": "low",
+      "confidence": "high"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.4686799333333334,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 91,
+    "monitor_time": "2025-07-17 22:01:48",
+    "data_time": "2025-07-17T21:00:18.034000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Send Notification",
+    "decision": "send_notification",
+    "scores": {
+      "activity": 0.5465016071090945,
+      "habit": 0.2955303798939517,
+      "confidence": 0.6394566676116225
+    },
+    "levels": {
+      "activity": "medium",
+      "habit": "low",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.5154682666666666,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 92,
+    "monitor_time": "2025-07-17 22:16:49",
+    "data_time": "2025-07-17T21:15:18.273000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Send Notification",
+    "decision": "send_notification",
+    "scores": {
+      "activity": 0.5446862144313096,
+      "habit": 0.2955303798939517,
+      "confidence": 0.5645051549540401
+    },
+    "levels": {
+      "activity": "medium",
+      "habit": "low",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.5172074666666666,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 93,
+    "monitor_time": "2025-07-17 22:31:49",
+    "data_time": "2025-07-17T21:30:08.578000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Send Notification",
+    "decision": "send_notification",
+    "scores": {
+      "activity": 0.5463300184833261,
+      "habit": 0.2955303798939517,
+      "confidence": 0.5782835281094544
+    },
+    "levels": {
+      "activity": "medium",
+      "habit": "low",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.6828359333333334,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 94,
+    "monitor_time": "2025-07-17 22:46:49",
+    "data_time": "2025-07-17T21:45:13.702000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Send Notification",
+    "decision": "send_notification",
+    "scores": {
+      "activity": 0.5435359682415042,
+      "habit": 0.2955303798939517,
+      "confidence": 0.5575167081344645
+    },
+    "levels": {
+      "activity": "medium",
+      "habit": "low",
+      "confidence": "medium"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.6016119333333334,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 95,
+    "monitor_time": "2025-07-17 23:01:49",
+    "data_time": "2025-07-17T22:00:14.541000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.13234013652828086,
+      "habit": 0.2955303798939517,
+      "confidence": 0.1820720378275069
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.5920431499999999,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 96,
+    "monitor_time": "2025-07-17 23:16:50",
+    "data_time": "2025-07-17T22:15:13.769000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.13347469702533968,
+      "habit": 0.2955303798939517,
+      "confidence": 0.19855308485633574
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.61265595,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 97,
+    "monitor_time": "2025-07-17 23:31:50",
+    "data_time": "2025-07-17T22:30:27.116000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.11206314242190718,
+      "habit": 0.2955303798939517,
+      "confidence": 0.16931456869115089
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.3950247,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 98,
+    "monitor_time": "2025-07-17 23:46:50",
+    "data_time": "2025-07-17T22:45:26.323000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.13278090889634014,
+      "habit": 0.2955303798939517,
+      "confidence": 0.11451611509860132
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.4130143,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 99,
+    "monitor_time": "2025-07-18 00:01:51",
+    "data_time": "2025-07-17T23:00:17.403000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.1
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.5667091,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 100,
+    "monitor_time": "2025-07-18 00:16:51",
+    "data_time": "2025-07-17T23:15:03.142000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.1
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.8087866166666666,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 101,
+    "monitor_time": "2025-07-18 00:31:51",
+    "data_time": "2025-07-17T23:30:14.825000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.13989905530340996
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.6233358166666667,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 102,
+    "monitor_time": "2025-07-18 00:46:52",
+    "data_time": "2025-07-17T23:45:12.081000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.1
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.6769168833333334,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 103,
+    "monitor_time": "2025-07-18 01:01:52",
+    "data_time": "2025-07-18T00:00:10.648000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.1432595108141823
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.7071630833333333,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 104,
+    "monitor_time": "2025-07-18 01:16:53",
+    "data_time": "2025-07-18T00:14:52.933000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.1932595108141823
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 2.01191355,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 105,
+    "monitor_time": "2025-07-18 01:31:53",
+    "data_time": "2025-07-18T00:30:18.847000+00:00",
+    "power_w": 0.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.1855557912035174
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.5860451500000001,
+    "reason": "",
+    "threshold_used": 36.9
+  },
+  {
+    "monitor_count": 106,
+    "monitor_time": "2025-07-18 01:46:54",
+    "data_time": "2025-07-18T00:45:18.106000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.22416932295912
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 1.6079612666666667,
+    "reason": "",
+    "threshold_used": 36.9
+  }
+]

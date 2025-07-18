@@ -1126,171 +1126,171 @@ class ImprovedUserHabitScoreModule:
                 'valid_rules': 0
             }
 
-    def plot_triangular_membership_functions(self):
+    # def plot_triangular_membership_functions(self):
         
-        # 確保有 membership_parameters
-        if not hasattr(self, 'membership_parameters') or not self.membership_parameters:
-            print("❌ 沒有找到 membership_parameters，請先運行完整分析")
-            return
+    #     # 確保有 membership_parameters
+    #     if not hasattr(self, 'membership_parameters') or not self.membership_parameters:
+    #         print("❌ 沒有找到 membership_parameters，請先運行完整分析")
+    #         return
         
-        # 設置圖形
-        fig, axes = plt.subplots(1, 3, figsize=(18, 6))
-        fig.suptitle('Triangular Membership Functions', fontsize=16, fontweight='bold')
+    #     # 設置圖形
+    #     fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+    #     fig.suptitle('Triangular Membership Functions', fontsize=16, fontweight='bold')
         
-        # 定義顏色和樣式
-        colors = ['red', 'orange', 'green']
-        line_styles = ['-', '--', '-.']
+    #     # 定義顏色和樣式
+    #     colors = ['red', 'orange', 'green']
+    #     line_styles = ['-', '--', '-.']
         
-        # 1. Usage Probability 隸屬函數
-        ax1 = axes[0]
-        x_usage = np.linspace(0, 1, 1000)
+    #     # 1. Usage Probability 隸屬函數
+    #     ax1 = axes[0]
+    #     x_usage = np.linspace(0, 1, 1000)
         
-        if 'usage_probability' in self.membership_parameters:
-            usage_params = self.membership_parameters['usage_probability']
+    #     if 'usage_probability' in self.membership_parameters:
+    #         usage_params = self.membership_parameters['usage_probability']
             
-            # 檢查參數有效性
-            if all(key in usage_params for key in ['p0', 'p25', 'p50', 'p75', 'p100']):
-                p0, p25, p50, p75, p100 = [usage_params[k] for k in ['p0', 'p25', 'p50', 'p75', 'p100']]
+    #         # 檢查參數有效性
+    #         if all(key in usage_params for key in ['p0', 'p25', 'p50', 'p75', 'p100']):
+    #             p0, p25, p50, p75, p100 = [usage_params[k] for k in ['p0', 'p25', 'p50', 'p75', 'p100']]
                 
-                # 計算三個三角函數
-                usage_low = np.array([self.triangular_membership(x, p0, p25, p50) for x in x_usage])
-                usage_medium = np.array([self.triangular_membership(x, p25, p50, p75) for x in x_usage])
-                usage_high = np.array([self.triangular_membership(x, p50, p75, p100) for x in x_usage])
+    #             # 計算三個三角函數
+    #             usage_low = np.array([self.triangular_membership(x, p0, p25, p50) for x in x_usage])
+    #             usage_medium = np.array([self.triangular_membership(x, p25, p50, p75) for x in x_usage])
+    #             usage_high = np.array([self.triangular_membership(x, p50, p75, p100) for x in x_usage])
                 
-                # 繪製
-                ax1.plot(x_usage, usage_low, color=colors[0], linewidth=3, 
-                        label=f'Low ({p0:.3f}, {p25:.3f}, {p50:.3f})', linestyle=line_styles[0])
-                ax1.plot(x_usage, usage_medium, color=colors[1], linewidth=3, 
-                        label=f'Medium ({p25:.3f}, {p50:.3f}, {p75:.3f})', linestyle=line_styles[1])
-                ax1.plot(x_usage, usage_high, color=colors[2], linewidth=3, 
-                        label=f'High ({p50:.3f}, {p75:.3f}, {p100:.3f})', linestyle=line_styles[2])
+    #             # 繪製
+    #             ax1.plot(x_usage, usage_low, color=colors[0], linewidth=3, 
+    #                     label=f'Low ({p0:.3f}, {p25:.3f}, {p50:.3f})', linestyle=line_styles[0])
+    #             ax1.plot(x_usage, usage_medium, color=colors[1], linewidth=3, 
+    #                     label=f'Medium ({p25:.3f}, {p50:.3f}, {p75:.3f})', linestyle=line_styles[1])
+    #             ax1.plot(x_usage, usage_high, color=colors[2], linewidth=3, 
+    #                     label=f'High ({p50:.3f}, {p75:.3f}, {p100:.3f})', linestyle=line_styles[2])
                 
-                # 標記關鍵點
-                key_points = [p25, p50, p75]
-                for i, point in enumerate(key_points):
-                    ax1.axvline(point, color='gray', linestyle=':', alpha=0.6, linewidth=1)
-                    ax1.text(point, 1.05, f'P{25*(i+1)}', ha='center', va='bottom', fontsize=8)
+    #             # 標記關鍵點
+    #             key_points = [p25, p50, p75]
+    #             for i, point in enumerate(key_points):
+    #                 ax1.axvline(point, color='gray', linestyle=':', alpha=0.6, linewidth=1)
+    #                 ax1.text(point, 1.05, f'P{25*(i+1)}', ha='center', va='bottom', fontsize=8)
                 
-                # 填充區域
-                ax1.fill_between(x_usage, 0, usage_low, alpha=0.2, color=colors[0])
-                ax1.fill_between(x_usage, 0, usage_medium, alpha=0.2, color=colors[1])
-                ax1.fill_between(x_usage, 0, usage_high, alpha=0.2, color=colors[2])
-            else:
-                ax1.text(0.5, 0.5, 'Usage Probability\n unsufficent parameters', ha='center', va='center', fontsize=12)
+    #             # 填充區域
+    #             ax1.fill_between(x_usage, 0, usage_low, alpha=0.2, color=colors[0])
+    #             ax1.fill_between(x_usage, 0, usage_medium, alpha=0.2, color=colors[1])
+    #             ax1.fill_between(x_usage, 0, usage_high, alpha=0.2, color=colors[2])
+    #         else:
+    #             ax1.text(0.5, 0.5, 'Usage Probability\n unsufficent parameters', ha='center', va='center', fontsize=12)
         
-        ax1.set_xlabel('Usage Probability')
-        ax1.set_ylabel('Membership Degree')
-        ax1.set_title('Usage Probability', fontweight='bold')
-        ax1.legend(loc='upper right', fontsize=9)
-        ax1.grid(True, alpha=0.3)
-        ax1.set_xlim(0, 1)
-        ax1.set_ylim(0, 1.1)
+    #     ax1.set_xlabel('Usage Probability')
+    #     ax1.set_ylabel('Membership Degree')
+    #     ax1.set_title('Usage Probability', fontweight='bold')
+    #     ax1.legend(loc='upper right', fontsize=9)
+    #     ax1.grid(True, alpha=0.3)
+    #     ax1.set_xlim(0, 1)
+    #     ax1.set_ylim(0, 1.1)
         
-        # 2. Stability 隸屬函數
-        ax2 = axes[1]
-        x_stability = np.linspace(0, 1, 1000)
+    #     # 2. Stability 隸屬函數
+    #     ax2 = axes[1]
+    #     x_stability = np.linspace(0, 1, 1000)
         
-        if 'stability' in self.membership_parameters:
-            stability_params = self.membership_parameters['stability']
+    #     if 'stability' in self.membership_parameters:
+    #         stability_params = self.membership_parameters['stability']
             
-            if all(key in stability_params for key in ['p0', 'p25', 'p50', 'p75', 'p100']):
-                p0, p25, p50, p75, p100 = [stability_params[k] for k in ['p0', 'p25', 'p50', 'p75', 'p100']]
+    #         if all(key in stability_params for key in ['p0', 'p25', 'p50', 'p75', 'p100']):
+    #             p0, p25, p50, p75, p100 = [stability_params[k] for k in ['p0', 'p25', 'p50', 'p75', 'p100']]
                 
-                stability_low = np.array([self.triangular_membership(x, p0, p25, p50) for x in x_stability])
-                stability_medium = np.array([self.triangular_membership(x, p25, p50, p75) for x in x_stability])
-                stability_high = np.array([self.triangular_membership(x, p50, p75, p100) for x in x_stability])
+    #             stability_low = np.array([self.triangular_membership(x, p0, p25, p50) for x in x_stability])
+    #             stability_medium = np.array([self.triangular_membership(x, p25, p50, p75) for x in x_stability])
+    #             stability_high = np.array([self.triangular_membership(x, p50, p75, p100) for x in x_stability])
                 
-                ax2.plot(x_stability, stability_low, color=colors[0], linewidth=3, 
-                        label=f'Low ({p0:.3f}, {p25:.3f}, {p50:.3f})', linestyle=line_styles[0])
-                ax2.plot(x_stability, stability_medium, color=colors[1], linewidth=3, 
-                        label=f'Medium ({p25:.3f}, {p50:.3f}, {p75:.3f})', linestyle=line_styles[1])
-                ax2.plot(x_stability, stability_high, color=colors[2], linewidth=3, 
-                        label=f'High ({p50:.3f}, {p75:.3f}, {p100:.3f})', linestyle=line_styles[2])
+    #             ax2.plot(x_stability, stability_low, color=colors[0], linewidth=3, 
+    #                     label=f'Low ({p0:.3f}, {p25:.3f}, {p50:.3f})', linestyle=line_styles[0])
+    #             ax2.plot(x_stability, stability_medium, color=colors[1], linewidth=3, 
+    #                     label=f'Medium ({p25:.3f}, {p50:.3f}, {p75:.3f})', linestyle=line_styles[1])
+    #             ax2.plot(x_stability, stability_high, color=colors[2], linewidth=3, 
+    #                     label=f'High ({p50:.3f}, {p75:.3f}, {p100:.3f})', linestyle=line_styles[2])
                 
-                # 標記關鍵點
-                key_points = [p25, p50, p75]
-                for i, point in enumerate(key_points):
-                    ax2.axvline(point, color='gray', linestyle=':', alpha=0.6, linewidth=1)
-                    ax2.text(point, 1.05, f'P{25*(i+1)}', ha='center', va='bottom', fontsize=8)
+    #             # 標記關鍵點
+    #             key_points = [p25, p50, p75]
+    #             for i, point in enumerate(key_points):
+    #                 ax2.axvline(point, color='gray', linestyle=':', alpha=0.6, linewidth=1)
+    #                 ax2.text(point, 1.05, f'P{25*(i+1)}', ha='center', va='bottom', fontsize=8)
                 
-                # 填充區域
-                ax2.fill_between(x_stability, 0, stability_low, alpha=0.2, color=colors[0])
-                ax2.fill_between(x_stability, 0, stability_medium, alpha=0.2, color=colors[1])
-                ax2.fill_between(x_stability, 0, stability_high, alpha=0.2, color=colors[2])
-            else:
-                ax2.text(0.5, 0.5, 'Stability\n參數不完整', ha='center', va='center', fontsize=12)
+    #             # 填充區域
+    #             ax2.fill_between(x_stability, 0, stability_low, alpha=0.2, color=colors[0])
+    #             ax2.fill_between(x_stability, 0, stability_medium, alpha=0.2, color=colors[1])
+    #             ax2.fill_between(x_stability, 0, stability_high, alpha=0.2, color=colors[2])
+    #         else:
+    #             ax2.text(0.5, 0.5, 'Stability\n參數不完整', ha='center', va='center', fontsize=12)
         
-        ax2.set_xlabel('Stability')
-        ax2.set_ylabel('Membership Degree')
-        ax2.set_title('Usage Stability', fontweight='bold')
-        ax2.legend(loc='upper right', fontsize=9)
-        ax2.grid(True, alpha=0.3)
-        ax2.set_xlim(0, 1)
-        ax2.set_ylim(0, 1.1)
+    #     ax2.set_xlabel('Stability')
+    #     ax2.set_ylabel('Membership Degree')
+    #     ax2.set_title('Usage Stability', fontweight='bold')
+    #     ax2.legend(loc='upper right', fontsize=9)
+    #     ax2.grid(True, alpha=0.3)
+    #     ax2.set_xlim(0, 1)
+    #     ax2.set_ylim(0, 1.1)
         
-        # 3. Time Factor 隸屬函數
-        ax3 = axes[2]
-        x_time = np.linspace(0, 1, 1000)
+    #     # 3. Time Factor 隸屬函數
+    #     ax3 = axes[2]
+    #     x_time = np.linspace(0, 1, 1000)
         
-        if 'time_factor' in self.membership_parameters:
-            time_params = self.membership_parameters['time_factor']
+    #     if 'time_factor' in self.membership_parameters:
+    #         time_params = self.membership_parameters['time_factor']
             
-            if all(key in time_params for key in ['p0', 'p25', 'p50', 'p75', 'p100']):
-                p0, p25, p50, p75, p100 = [time_params[k] for k in ['p0', 'p25', 'p50', 'p75', 'p100']]
+    #         if all(key in time_params for key in ['p0', 'p25', 'p50', 'p75', 'p100']):
+    #             p0, p25, p50, p75, p100 = [time_params[k] for k in ['p0', 'p25', 'p50', 'p75', 'p100']]
                 
-                time_non_use = np.array([self.triangular_membership(x, p0, p25, p50) for x in x_time])
-                time_possible = np.array([self.triangular_membership(x, p25, p50, p75) for x in x_time])
-                time_peak = np.array([self.triangular_membership(x, p50, p75, p100) for x in x_time])
+    #             time_non_use = np.array([self.triangular_membership(x, p0, p25, p50) for x in x_time])
+    #             time_possible = np.array([self.triangular_membership(x, p25, p50, p75) for x in x_time])
+    #             time_peak = np.array([self.triangular_membership(x, p50, p75, p100) for x in x_time])
                 
-                ax3.plot(x_time, time_non_use, color=colors[0], linewidth=3, 
-                        label=f'Non-use ({p0:.3f}, {p25:.3f}, {p50:.3f})', linestyle=line_styles[0])
-                ax3.plot(x_time, time_possible, color=colors[1], linewidth=3, 
-                        label=f'Possible ({p25:.3f}, {p50:.3f}, {p75:.3f})', linestyle=line_styles[1])
-                ax3.plot(x_time, time_peak, color=colors[2], linewidth=3, 
-                        label=f'Peak ({p50:.3f}, {p75:.3f}, {p100:.3f})', linestyle=line_styles[2])
+    #             ax3.plot(x_time, time_non_use, color=colors[0], linewidth=3, 
+    #                     label=f'Non-use ({p0:.3f}, {p25:.3f}, {p50:.3f})', linestyle=line_styles[0])
+    #             ax3.plot(x_time, time_possible, color=colors[1], linewidth=3, 
+    #                     label=f'Possible ({p25:.3f}, {p50:.3f}, {p75:.3f})', linestyle=line_styles[1])
+    #             ax3.plot(x_time, time_peak, color=colors[2], linewidth=3, 
+    #                     label=f'Peak ({p50:.3f}, {p75:.3f}, {p100:.3f})', linestyle=line_styles[2])
                 
-                # 標記關鍵點
-                key_points = [p25, p50, p75]
-                for i, point in enumerate(key_points):
-                    ax3.axvline(point, color='gray', linestyle=':', alpha=0.6, linewidth=1)
-                    ax3.text(point, 1.05, f'P{25*(i+1)}', ha='center', va='bottom', fontsize=8)
+    #             # 標記關鍵點
+    #             key_points = [p25, p50, p75]
+    #             for i, point in enumerate(key_points):
+    #                 ax3.axvline(point, color='gray', linestyle=':', alpha=0.6, linewidth=1)
+    #                 ax3.text(point, 1.05, f'P{25*(i+1)}', ha='center', va='bottom', fontsize=8)
                 
-                # 填充區域
-                ax3.fill_between(x_time, 0, time_non_use, alpha=0.2, color=colors[0])
-                ax3.fill_between(x_time, 0, time_possible, alpha=0.2, color=colors[1])
-                ax3.fill_between(x_time, 0, time_peak, alpha=0.2, color=colors[2])
-            else:
-                ax3.text(0.5, 0.5, 'Time Factor\n參數不完整', ha='center', va='center', fontsize=12)
+    #             # 填充區域
+    #             ax3.fill_between(x_time, 0, time_non_use, alpha=0.2, color=colors[0])
+    #             ax3.fill_between(x_time, 0, time_possible, alpha=0.2, color=colors[1])
+    #             ax3.fill_between(x_time, 0, time_peak, alpha=0.2, color=colors[2])
+    #         else:
+    #             ax3.text(0.5, 0.5, 'Time Factor\n參數不完整', ha='center', va='center', fontsize=12)
         
-        ax3.set_xlabel('Time Factor / Usage Rate')
-        ax3.set_ylabel('Membership Degree')
-        ax3.set_title('Time Factor', fontweight='bold')
-        ax3.legend(loc='upper right', fontsize=9)
-        ax3.grid(True, alpha=0.3)
-        ax3.set_xlim(0, 1)
-        ax3.set_ylim(0, 1.1)
+    #     ax3.set_xlabel('Time Factor / Usage Rate')
+    #     ax3.set_ylabel('Membership Degree')
+    #     ax3.set_title('Time Factor', fontweight='bold')
+    #     ax3.legend(loc='upper right', fontsize=9)
+    #     ax3.grid(True, alpha=0.3)
+    #     ax3.set_xlim(0, 1)
+    #     ax3.set_ylim(0, 1.1)
         
-        plt.tight_layout()
-        plt.show()
+    #     plt.tight_layout()
+    #     plt.show()
         
-        # 打印詳細參數信息
-        print("="*60)
-        print("三角隸屬函數參數詳情")
-        print("="*60)
+    #     # 打印詳細參數信息
+    #     print("="*60)
+    #     print("三角隸屬函數參數詳情")
+    #     print("="*60)
         
-        for param_type, params in self.membership_parameters.items():
-            print(f"\n📊 {param_type.replace('_', ' ').title()}:")
-            if all(key in params for key in ['p0', 'p25', 'p50', 'p75', 'p100']):
-                p0, p25, p50, p75, p100 = [params[k] for k in ['p0', 'p25', 'p50', 'p75', 'p100']]
-                print(f"  資料範圍: [{p0:.3f}, {p100:.3f}]")
-                print(f"  Low 三角函數:    ({p0:.3f}, {p25:.3f}, {p50:.3f})")
-                print(f"  Medium 三角函數: ({p25:.3f}, {p50:.3f}, {p75:.3f})")
-                print(f"  High 三角函數:   ({p50:.3f}, {p75:.3f}, {p100:.3f})")
+    #     for param_type, params in self.membership_parameters.items():
+    #         print(f"\n📊 {param_type.replace('_', ' ').title()}:")
+    #         if all(key in params for key in ['p0', 'p25', 'p50', 'p75', 'p100']):
+    #             p0, p25, p50, p75, p100 = [params[k] for k in ['p0', 'p25', 'p50', 'p75', 'p100']]
+    #             print(f"  資料範圍: [{p0:.3f}, {p100:.3f}]")
+    #             print(f"  Low 三角函數:    ({p0:.3f}, {p25:.3f}, {p50:.3f})")
+    #             print(f"  Medium 三角函數: ({p25:.3f}, {p50:.3f}, {p75:.3f})")
+    #             print(f"  High 三角函數:   ({p50:.3f}, {p75:.3f}, {p100:.3f})")
                 
-                # 計算重疊度
-                overlap_low_med = max(0, p50 - p25) / (p50 - p0) if p50 > p0 else 0
-                overlap_med_high = max(0, p75 - p50) / (p100 - p50) if p100 > p50 else 0
-                print(f"  重疊度: Low-Medium: {overlap_low_med:.2f}, Medium-High: {overlap_med_high:.2f}")
+    #             # 計算重疊度
+    #             overlap_low_med = max(0, p50 - p25) / (p50 - p0) if p50 > p0 else 0
+    #             overlap_med_high = max(0, p75 - p50) / (p100 - p50) if p100 > p50 else 0
+    #             print(f"  重疊度: Low-Medium: {overlap_low_med:.2f}, Medium-High: {overlap_med_high:.2f}")
 
 
     def test_habit_score_calculation(self, num_tests=5):
@@ -1486,7 +1486,7 @@ class ImprovedUserHabitScoreModule:
 
         print("\n" + "-"*50)
         print("==== Plotting Triangular Membership Functions ====")
-        self.plot_triangular_membership_functions()
+        # self.plot_triangular_membership_functions()
 
         print("\n" + "="*80)
         print("✅ ANALYSIS COMPLETE - System ready for production use!")

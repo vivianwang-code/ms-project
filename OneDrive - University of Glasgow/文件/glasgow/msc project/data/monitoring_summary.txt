@@ -1,0 +1,19 @@
+Phantom Load Monitoring System - Runtime Summary
+=====================================
+Last updated: 2025-07-18 01:46:54
+
+Monitoring Statistics:
+- Total monitoring cycles: 106
+- Valid data cycles: 103
+- Phantom load detections: 91 times (88.3%)
+- Normal usage detections: 12 times (11.7%)
+
+System Configuration:
+- Phantom load threshold: 36.9W
+- Monitor interval: 900 seconds
+- Decision system status: Available
+
+Log Files:
+- CSV records: phantom_load_monitoring_log.csv
+- Detailed records: phantom_load_detailed_log.json
+- Summary records: monitoring_summary.txt

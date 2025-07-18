@@ -742,119 +742,119 @@ class NoShutdownUserHabitScoreModule:
                 'valid_rules': 0
             }
 
-    def plot_triangular_membership_functions(self):
-        """繪製三角隸屬函數圖"""
-        if not hasattr(self, 'membership_parameters') or not self.membership_parameters:
-            print("❌ 沒有找到 membership_parameters，請先運行完整分析")
-            return
+    # def plot_triangular_membership_functions(self):
+    #     """繪製三角隸屬函數圖"""
+    #     if not hasattr(self, 'membership_parameters') or not self.membership_parameters:
+    #         print("❌ 沒有找到 membership_parameters，請先運行完整分析")
+    #         return
         
-        fig, axes = plt.subplots(1, 3, figsize=(18, 6))
-        fig.suptitle('三角隸屬函數參數詳情', fontsize=16, fontweight='bold')
+    #     fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+    #     fig.suptitle('三角隸屬函數參數詳情', fontsize=16, fontweight='bold')
         
-        colors = ['red', 'orange', 'green']
-        line_styles = ['-', '--', '-.']
+    #     colors = ['red', 'orange', 'green']
+    #     line_styles = ['-', '--', '-.']
         
-        # 1. 使用強度隸屬函數
-        ax1 = axes[0]
-        x_intensity = np.linspace(1, 3, 1000)
+    #     # 1. 使用強度隸屬函數
+    #     ax1 = axes[0]
+    #     x_intensity = np.linspace(1, 3, 1000)
         
-        if 'usage_intensity' in self.membership_parameters:
-            intensity_params = self.membership_parameters['usage_intensity']
+    #     if 'usage_intensity' in self.membership_parameters:
+    #         intensity_params = self.membership_parameters['usage_intensity']
             
-            if all(key in intensity_params for key in ['p0', 'p25', 'p50', 'p75', 'p100']):
-                p0, p25, p50, p75, p100 = [intensity_params[k] for k in ['p0', 'p25', 'p50', 'p75', 'p100']]
+    #         if all(key in intensity_params for key in ['p0', 'p25', 'p50', 'p75', 'p100']):
+    #             p0, p25, p50, p75, p100 = [intensity_params[k] for k in ['p0', 'p25', 'p50', 'p75', 'p100']]
                 
-                intensity_low = np.array([self.triangular_membership(x, p0, p25, p50) for x in x_intensity])
-                intensity_medium = np.array([self.triangular_membership(x, p25, p50, p75) for x in x_intensity])
-                intensity_high = np.array([self.triangular_membership(x, p50, p75, p100) for x in x_intensity])
+    #             intensity_low = np.array([self.triangular_membership(x, p0, p25, p50) for x in x_intensity])
+    #             intensity_medium = np.array([self.triangular_membership(x, p25, p50, p75) for x in x_intensity])
+    #             intensity_high = np.array([self.triangular_membership(x, p50, p75, p100) for x in x_intensity])
                 
-                ax1.plot(x_intensity, intensity_low, color=colors[0], linewidth=3, 
-                        label=f'Low ({p0:.2f}, {p25:.2f}, {p50:.2f})', linestyle=line_styles[0])
-                ax1.plot(x_intensity, intensity_medium, color=colors[1], linewidth=3, 
-                        label=f'Medium ({p25:.2f}, {p50:.2f}, {p75:.2f})', linestyle=line_styles[1])
-                ax1.plot(x_intensity, intensity_high, color=colors[2], linewidth=3, 
-                        label=f'High ({p50:.2f}, {p75:.2f}, {p100:.2f})', linestyle=line_styles[2])
+    #             ax1.plot(x_intensity, intensity_low, color=colors[0], linewidth=3, 
+    #                     label=f'Low ({p0:.2f}, {p25:.2f}, {p50:.2f})', linestyle=line_styles[0])
+    #             ax1.plot(x_intensity, intensity_medium, color=colors[1], linewidth=3, 
+    #                     label=f'Medium ({p25:.2f}, {p50:.2f}, {p75:.2f})', linestyle=line_styles[1])
+    #             ax1.plot(x_intensity, intensity_high, color=colors[2], linewidth=3, 
+    #                     label=f'High ({p50:.2f}, {p75:.2f}, {p100:.2f})', linestyle=line_styles[2])
                 
-                ax1.fill_between(x_intensity, 0, intensity_low, alpha=0.2, color=colors[0])
-                ax1.fill_between(x_intensity, 0, intensity_medium, alpha=0.2, color=colors[1])
-                ax1.fill_between(x_intensity, 0, intensity_high, alpha=0.2, color=colors[2])
+    #             ax1.fill_between(x_intensity, 0, intensity_low, alpha=0.2, color=colors[0])
+    #             ax1.fill_between(x_intensity, 0, intensity_medium, alpha=0.2, color=colors[1])
+    #             ax1.fill_between(x_intensity, 0, intensity_high, alpha=0.2, color=colors[2])
         
-        ax1.set_xlabel('平均使用強度 (1=phantom, 2=light, 3=regular)')
-        ax1.set_ylabel('隸屬度')
-        ax1.set_title('使用強度偏好', fontweight='bold')
-        ax1.legend(loc='upper right', fontsize=9)
-        ax1.grid(True, alpha=0.3)
-        ax1.set_xlim(1, 3)
-        ax1.set_ylim(0, 1.1)
+    #     ax1.set_xlabel('平均使用強度 (1=phantom, 2=light, 3=regular)')
+    #     ax1.set_ylabel('隸屬度')
+    #     ax1.set_title('使用強度偏好', fontweight='bold')
+    #     ax1.legend(loc='upper right', fontsize=9)
+    #     ax1.grid(True, alpha=0.3)
+    #     ax1.set_xlim(1, 3)
+    #     ax1.set_ylim(0, 1.1)
         
-        # 2. 一致性隸屬函數
-        ax2 = axes[1]
-        x_consistency = np.linspace(0, 1, 1000)
+    #     # 2. 一致性隸屬函數
+    #     ax2 = axes[1]
+    #     x_consistency = np.linspace(0, 1, 1000)
         
-        if 'consistency' in self.membership_parameters:
-            consistency_params = self.membership_parameters['consistency']
+    #     if 'consistency' in self.membership_parameters:
+    #         consistency_params = self.membership_parameters['consistency']
             
-            if all(key in consistency_params for key in ['p0', 'p25', 'p50', 'p75', 'p100']):
-                p0, p25, p50, p75, p100 = [consistency_params[k] for k in ['p0', 'p25', 'p50', 'p75', 'p100']]
+    #         if all(key in consistency_params for key in ['p0', 'p25', 'p50', 'p75', 'p100']):
+    #             p0, p25, p50, p75, p100 = [consistency_params[k] for k in ['p0', 'p25', 'p50', 'p75', 'p100']]
                 
-                consistency_low = np.array([self.triangular_membership(x, p0, p25, p50) for x in x_consistency])
-                consistency_medium = np.array([self.triangular_membership(x, p25, p50, p75) for x in x_consistency])
-                consistency_high = np.array([self.triangular_membership(x, p50, p75, p100) for x in x_consistency])
+    #             consistency_low = np.array([self.triangular_membership(x, p0, p25, p50) for x in x_consistency])
+    #             consistency_medium = np.array([self.triangular_membership(x, p25, p50, p75) for x in x_consistency])
+    #             consistency_high = np.array([self.triangular_membership(x, p50, p75, p100) for x in x_consistency])
                 
-                ax2.plot(x_consistency, consistency_low, color=colors[0], linewidth=3, 
-                        label=f'Low ({p0:.2f}, {p25:.2f}, {p50:.2f})', linestyle=line_styles[0])
-                ax2.plot(x_consistency, consistency_medium, color=colors[1], linewidth=3, 
-                        label=f'Medium ({p25:.2f}, {p50:.2f}, {p75:.2f})', linestyle=line_styles[1])
-                ax2.plot(x_consistency, consistency_high, color=colors[2], linewidth=3, 
-                        label=f'High ({p50:.2f}, {p75:.2f}, {p100:.2f})', linestyle=line_styles[2])
+    #             ax2.plot(x_consistency, consistency_low, color=colors[0], linewidth=3, 
+    #                     label=f'Low ({p0:.2f}, {p25:.2f}, {p50:.2f})', linestyle=line_styles[0])
+    #             ax2.plot(x_consistency, consistency_medium, color=colors[1], linewidth=3, 
+    #                     label=f'Medium ({p25:.2f}, {p50:.2f}, {p75:.2f})', linestyle=line_styles[1])
+    #             ax2.plot(x_consistency, consistency_high, color=colors[2], linewidth=3, 
+    #                     label=f'High ({p50:.2f}, {p75:.2f}, {p100:.2f})', linestyle=line_styles[2])
                 
-                ax2.fill_between(x_consistency, 0, consistency_low, alpha=0.2, color=colors[0])
-                ax2.fill_between(x_consistency, 0, consistency_medium, alpha=0.2, color=colors[1])
-                ax2.fill_between(x_consistency, 0, consistency_high, alpha=0.2, color=colors[2])
+    #             ax2.fill_between(x_consistency, 0, consistency_low, alpha=0.2, color=colors[0])
+    #             ax2.fill_between(x_consistency, 0, consistency_medium, alpha=0.2, color=colors[1])
+    #             ax2.fill_between(x_consistency, 0, consistency_high, alpha=0.2, color=colors[2])
         
-        ax2.set_xlabel('使用一致性')
-        ax2.set_ylabel('隸屬度')
-        ax2.set_title('使用穩定性', fontweight='bold')
-        ax2.legend(loc='upper right', fontsize=9)
-        ax2.grid(True, alpha=0.3)
-        ax2.set_xlim(0, 1)
-        ax2.set_ylim(0, 1.1)
+    #     ax2.set_xlabel('使用一致性')
+    #     ax2.set_ylabel('隸屬度')
+    #     ax2.set_title('使用穩定性', fontweight='bold')
+    #     ax2.legend(loc='upper right', fontsize=9)
+    #     ax2.grid(True, alpha=0.3)
+    #     ax2.set_xlim(0, 1)
+    #     ax2.set_ylim(0, 1.1)
         
-        # 3. 時間偏好隸屬函數
-        ax3 = axes[2]
-        x_preference = np.linspace(0, 1, 1000)
+    #     # 3. 時間偏好隸屬函數
+    #     ax3 = axes[2]
+    #     x_preference = np.linspace(0, 1, 1000)
         
-        if 'time_preference' in self.membership_parameters:
-            preference_params = self.membership_parameters['time_preference']
+    #     if 'time_preference' in self.membership_parameters:
+    #         preference_params = self.membership_parameters['time_preference']
             
-            if all(key in preference_params for key in ['p0', 'p25', 'p50', 'p75', 'p100']):
-                p0, p25, p50, p75, p100 = [preference_params[k] for k in ['p0', 'p25', 'p50', 'p75', 'p100']]
+    #         if all(key in preference_params for key in ['p0', 'p25', 'p50', 'p75', 'p100']):
+    #             p0, p25, p50, p75, p100 = [preference_params[k] for k in ['p0', 'p25', 'p50', 'p75', 'p100']]
                 
-                preference_low = np.array([self.triangular_membership(x, p0, p25, p50) for x in x_preference])
-                preference_medium = np.array([self.triangular_membership(x, p25, p50, p75) for x in x_preference])
-                preference_high = np.array([self.triangular_membership(x, p50, p75, p100) for x in x_preference])
+    #             preference_low = np.array([self.triangular_membership(x, p0, p25, p50) for x in x_preference])
+    #             preference_medium = np.array([self.triangular_membership(x, p25, p50, p75) for x in x_preference])
+    #             preference_high = np.array([self.triangular_membership(x, p50, p75, p100) for x in x_preference])
                 
-                ax3.plot(x_preference, preference_low, color=colors[0], linewidth=3, 
-                        label=f'Low ({p0:.2f}, {p25:.2f}, {p50:.2f})', linestyle=line_styles[0])
-                ax3.plot(x_preference, preference_medium, color=colors[1], linewidth=3, 
-                        label=f'Medium ({p25:.2f}, {p50:.2f}, {p75:.2f})', linestyle=line_styles[1])
-                ax3.plot(x_preference, preference_high, color=colors[2], linewidth=3, 
-                        label=f'High ({p50:.2f}, {p75:.2f}, {p100:.2f})', linestyle=line_styles[2])
+    #             ax3.plot(x_preference, preference_low, color=colors[0], linewidth=3, 
+    #                     label=f'Low ({p0:.2f}, {p25:.2f}, {p50:.2f})', linestyle=line_styles[0])
+    #             ax3.plot(x_preference, preference_medium, color=colors[1], linewidth=3, 
+    #                     label=f'Medium ({p25:.2f}, {p50:.2f}, {p75:.2f})', linestyle=line_styles[1])
+    #             ax3.plot(x_preference, preference_high, color=colors[2], linewidth=3, 
+    #                     label=f'High ({p50:.2f}, {p75:.2f}, {p100:.2f})', linestyle=line_styles[2])
                 
-                ax3.fill_between(x_preference, 0, preference_low, alpha=0.2, color=colors[0])
-                ax3.fill_between(x_preference, 0, preference_medium, alpha=0.2, color=colors[1])
-                ax3.fill_between(x_preference, 0, preference_high, alpha=0.2, color=colors[2])
+    #             ax3.fill_between(x_preference, 0, preference_low, alpha=0.2, color=colors[0])
+    #             ax3.fill_between(x_preference, 0, preference_medium, alpha=0.2, color=colors[1])
+    #             ax3.fill_between(x_preference, 0, preference_high, alpha=0.2, color=colors[2])
         
-        ax3.set_xlabel('時間偏好強度')
-        ax3.set_ylabel('隸屬度')
-        ax3.set_title('時間偏好', fontweight='bold')
-        ax3.legend(loc='upper right', fontsize=9)
-        ax3.grid(True, alpha=0.3)
-        ax3.set_xlim(0, 1)
-        ax3.set_ylim(0, 1.1)
+    #     ax3.set_xlabel('時間偏好強度')
+    #     ax3.set_ylabel('隸屬度')
+    #     ax3.set_title('時間偏好', fontweight='bold')
+    #     ax3.legend(loc='upper right', fontsize=9)
+    #     ax3.grid(True, alpha=0.3)
+    #     ax3.set_xlim(0, 1)
+    #     ax3.set_ylim(0, 1.1)
         
-        plt.tight_layout()
-        plt.show()
+    #     plt.tight_layout()
+    #     plt.show()
 
     def comprehensive_evaluation(self):
         """完整的系統評估"""
@@ -1006,7 +1006,7 @@ class NoShutdownUserHabitScoreModule:
 
         print("\n" + "-"*50)
         print("==== Plotting Triangular Membership Functions ====")
-        self.plot_triangular_membership_functions()
+        # self.plot_triangular_membership_functions()
 
         print("\n" + "="*80)
         print("✅ ANALYSIS COMPLETE - System ready for production use!")

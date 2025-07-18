@@ -321,6 +321,7 @@ class DecisionTreeSmartPowerAnalysis:
         return decision, debug_info
 
     def _fallback_activity_score(self, features, timestamp):
+        print("fallback activity score")
         """改進的fallback活動分數 - 確保多樣化分布"""
         hour = timestamp.hour
         weekday = timestamp.weekday()
@@ -343,11 +344,12 @@ class DecisionTreeSmartPowerAnalysis:
         variation = np.random.normal(0, 0.1)
         final_score = max(0.05, min(0.95, base_score + variation))
         
-        print(f'fallback activity: {final_score:.2f}')
+        # print(f'fallback activity: {final_score:.2f}')
         return final_score
 
     def _fallback_habit_score(self, features, timestamp):
         """改進的fallback習慣分數 - 確保多樣化分布"""
+        print("fallback habit score")
         hour = timestamp.hour
         weekday = timestamp.weekday()
         
@@ -369,11 +371,12 @@ class DecisionTreeSmartPowerAnalysis:
         variation = np.random.normal(0, 0.1)
         final_score = max(0.05, min(0.95, base_score + variation))
         
-        print(f'fallback habit: {final_score:.2f}')
+        # print(f'fallback habit: {final_score:.2f}')
         return final_score
 
     def _fallback_confidence_score(self, features, timestamp):
         """改進的fallback置信度分數 - 確保多樣化分布"""
+        print("fallback confidence score")
         hour = timestamp.hour
         
         # 更明確的分數範圍
@@ -390,7 +393,7 @@ class DecisionTreeSmartPowerAnalysis:
         variation = np.random.normal(0, 0.08)
         final_score = max(0.1, min(0.9, base_score + variation))
         
-        print(f'fallback confidence: {final_score:.2f}')
+        # print(f'fallback confidence: {final_score:.2f}')
         return final_score
 
     def _extract_enhanced_features(self, opportunity, df):
