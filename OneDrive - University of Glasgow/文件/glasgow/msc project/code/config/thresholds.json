@@ -1,0 +1,23 @@
+{
+  "generated_at": "2025-07-19T23:16:38.106197",
+  "method": "kmeans_3_clusters",
+  "thresholds": {
+    "phantom_upper": 36.55351502632105,
+    "light_lower": 36.55351502632105,
+    "light_upper": 80.59885760913912,
+    "regular_lower": 36.55351502632105,
+    "regular_upper": 80.59885760913912,
+    "heavy_lower": 80.59885760913912,
+    "cluster_centers": {
+      "phantom_center": 17.716332378223495,
+      "light_center": 55.390697674418604,
+      "regular_center": 105.80701754385964
+    }
+  },
+  "classification_rules": {
+    "non_use": "power == 0",
+    "phantom_load": "0 < power <= 36.55351502632105",
+    "light_use": "36.55351502632105 < power <= 80.59885760913912",
+    "regular_use": "power > 80.59885760913912"
+  }
+}
