@@ -1,0 +1,15 @@
+[2025-07-20 01:31:46] INFO     system: 🚀 Smart Power Management System Startup
+[2025-07-20 01:31:46] INFO     system: ======================================================================
+[2025-07-20 01:31:46] INFO     system: Step 1: Starting to export historical data from InfluxDB...
+[2025-07-20 01:31:47] INFO     system: ✅ Step 1 Completed: Historical data exported to data/historical_power_6months.csv
+[2025-07-20 01:31:47] INFO     system: Step 2: Starting data preprocessing...
+[2025-07-20 01:31:48] INFO     system: ✅ Step 2 Completed: Data preprocessing finished
+[2025-07-20 01:31:48] INFO     system:    Original data days: 13 days
+[2025-07-20 01:31:48] INFO     system:    Preprocessed file: data/data_after_preprocessing.csv
+[2025-07-20 01:31:48] WARNING  system: Insufficient data length: 13 days < 60 days
+[2025-07-20 01:31:48] INFO     system: Step 3: Starting data expansion, extending data to 2 months...
+[2025-07-20 01:31:49] INFO     system: ✅ Step 3 Completed: Data expanded to 2 months
+[2025-07-20 01:31:49] INFO     system:    Expanded file: data/complete_power_data_with_history.csv
+[2025-07-20 01:31:49] INFO     system: Step 4: Starting Phantom Load real-time monitoring...
+[2025-07-20 01:31:49] INFO     system: System initialization completed, entering monitoring mode
+[2025-07-20 01:31:49] INFO     system: ----------------------------------------------------------------------

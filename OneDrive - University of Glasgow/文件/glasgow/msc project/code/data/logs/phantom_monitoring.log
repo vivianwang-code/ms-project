@@ -1,0 +1,22 @@
+[2025-07-20 01:31:46] INFO     phantom: Successfully loaded Phantom Load Threshold: 36.55192254238858W
+[2025-07-20 01:31:49] INFO     phantom: 🚀 Phantom Load monitoring system startup
+[2025-07-20 01:31:49] INFO     phantom: Monitoring device: influxdb-JWN-D6
+[2025-07-20 01:31:49] INFO     phantom: Phantom Load threshold: 36.55192254238858W
+[2025-07-20 01:31:49] INFO     phantom: Monitor interval: 900 seconds
+[2025-07-20 01:31:49] INFO     phantom: Initializing logging system...
+[2025-07-20 01:31:49] INFO     phantom: Initializing decision system...
+[2025-07-20 01:31:51] INFO     phantom: Starting monitoring loop...
+[2025-07-20 01:31:51] INFO     phantom: Successfully retrieved data: 1.0W @ 2025-07-20 00:30:12.202000+00:00
+[2025-07-20 01:31:51] WARNING  phantom: 🚨 Phantom Load detected: 1.0W (< 36.55192254238858W)
+[2025-07-20 01:31:51] INFO     phantom: Score calculation completed - Activity: 0.05, Habit: 0.30, Confidence: 0.10
+[2025-07-20 01:31:51] INFO     phantom: Professional model usage rate: 100%
+[2025-07-20 01:31:51] INFO     phantom: Model sources - Activity: Professional Model, Habit: Professional Model, Confidence: Professional Model
+[2025-07-20 01:31:51] INFO     phantom: Final decision: Suggest Shutdown
+[2025-07-20 01:31:51] INFO     phantom: Intelligent decision result: Suggest Shutdown
+[2025-07-20 01:46:51] INFO     phantom: Successfully retrieved data: 1.0W @ 2025-07-20 00:45:11.354000+00:00
+[2025-07-20 01:46:51] WARNING  phantom: 🚨 Phantom Load detected: 1.0W (< 36.55192254238858W)
+[2025-07-20 01:46:51] INFO     phantom: Score calculation completed - Activity: 0.05, Habit: 0.30, Confidence: 0.10
+[2025-07-20 01:46:51] INFO     phantom: Professional model usage rate: 100%
+[2025-07-20 01:46:51] INFO     phantom: Model sources - Activity: Professional Model, Habit: Professional Model, Confidence: Professional Model
+[2025-07-20 01:46:51] INFO     phantom: Final decision: Suggest Shutdown
+[2025-07-20 01:46:51] INFO     phantom: Intelligent decision result: Suggest Shutdown

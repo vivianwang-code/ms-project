@@ -1,0 +1,30 @@
+[
+  {
+    "monitor_count": 1,
+    "monitor_time": "2025-07-20 01:58:34",
+    "data_time": "2025-07-20T00:45:11.354000+00:00",
+    "power_w": 1.0,
+    "type": "phantom_load",
+    "action": "Suggest Shutdown",
+    "decision": "suggest_shutdown",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.2955303798939517,
+      "confidence": 0.1
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "low",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 13.392189566666667,
+    "reason": "",
+    "threshold_used": 36.55297787861599
+  }
+]

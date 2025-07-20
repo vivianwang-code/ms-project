@@ -1,0 +1,2 @@
+monitor_time,data_time,power_w,type,action,decision,activity_score,habit_score,confidence_score,activity_level,habit_level,confidence_level,professional_percentage,data_age_minutes,reason
+2025-07-19 23:44:04,2025-07-19 22:30:13,1.0,phantom_load,Suggest Shutdown,suggest_shutdown,0.07909414466130885,0.2955303798939517,0.1,low,low,low,100.0,13.8,

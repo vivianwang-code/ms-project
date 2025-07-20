@@ -289,7 +289,11 @@ class PowerDataExpander():
             if self._should_skip_record(timestamp):
                 if i > 0 and extended_records:
                     # 更新上一筆記錄的時間差
-                    extended_records[-1]['time_diff_seconds'] = extended_records[-1].get('time_diff_seconds', 0) + 900
+                    # extended_records[-1]['time_diff_seconds'] = extended_records[-1].get('time_diff_seconds', 0) + 900
+                    current_diff = extended_records[-1].get('time_diff_seconds', 0)
+                    if current_diff is None:
+                        current_diff = 0
+                    extended_records[-1]['time_diff_seconds'] = current_diff + 900
                 continue
             
             # 生成功率和狀態（隨著時間接近原始數據，狀態會趨向於target_end_state）
@@ -469,69 +473,9 @@ class PowerDataExpander():
         # 保存檔案
         combined_df.to_csv(filename, index=False)
         print(f"\n💾 完整數據已保存到：{filename}")
-        
-        # 顯示詳細統計
-        self._print_comprehensive_statistics(combined_df)
-        
+
         return filename
     
-    def _print_comprehensive_statistics(self, df):
-        """
-        顯示comprehensive統計信息
-        """
-        print("\n" + "="*80)
-        print("📊 擴展數據統計報告")
-        print("="*80)
-        
-        # 基本信息
-        print(f"📅 時間範圍：{df['timestamp'].min()} 到 {df['timestamp'].max()}")
-        print(f"📝 總記錄數：{len(df):,}")
-        print(f"⏱️  時間跨度：{(df['timestamp'].max() - df['timestamp'].min()).days} 天")
-        
-        # 功率統計
-        print(f"\n⚡ 功率統計：")
-        print(f"   平均功率：{df['power'].mean():.1f}W")
-        print(f"   最小功率：{df['power'].min():.1f}W")
-        print(f"   最大功率：{df['power'].max():.1f}W")
-        print(f"   標準差：{df['power'].std():.1f}W")
-        
-        # 狀態分佈
-        print(f"\n🔋 使用狀態分佈：")
-        state_counts = df['power_state'].value_counts()
-        for state, count in state_counts.items():
-            percentage = count / len(df) * 100
-            print(f"   {state}: {count:,} 筆 ({percentage:.1f}%)")
-        
-        # 時間分佈
-        print(f"\n📅 時間分佈：")
-        df_copy = df.copy()
-        df_copy['weekday'] = df_copy['timestamp'].dt.weekday
-        weekday_count = (df_copy['weekday'] < 5).sum()
-        weekend_count = (df_copy['weekday'] >= 5).sum()
-        print(f"   工作日：{weekday_count:,} 筆 ({weekday_count/len(df)*100:.1f}%)")
-        print(f"   週末：{weekend_count:,} 筆 ({weekend_count/len(df)*100:.1f}%)")
-        
-        # 預估耗電量
-        print(f"\n💡 預估耗電量：")
-        total_kwh = df['power'].sum() * 0.25 / 1000  # 15分鐘間隔
-        daily_kwh = total_kwh / ((df['timestamp'].max() - df['timestamp'].min()).days)
-        annual_kwh = daily_kwh * 365
-        print(f"   總耗電量：{total_kwh:.2f} kWh")
-        print(f"   日均耗電：{daily_kwh:.2f} kWh")
-        print(f"   年度預估：{annual_kwh:.0f} kWh")
-        
-        # 對比原始數據
-        if hasattr(self, 'original_data') and self.original_data is not None:
-            orig_mean = self.original_data['power'].mean()
-            orig_phantom_rate = self.original_data.get('is_phantom_load', pd.Series()).mean()
-            new_phantom_rate = df['is_phantom_load'].mean()
-            
-            print(f"\n🔄 與原始數據對比：")
-            print(f"   原始平均功率：{orig_mean:.1f}W → 擴展平均功率：{df['power'].mean():.1f}W")
-            if not pd.isna(orig_phantom_rate):
-                print(f"   原始Phantom Load率：{orig_phantom_rate:.1%} → 擴展Phantom Load率：{new_phantom_rate:.1%}")
-        
-        print("="*80)
 
 
 # 使用示例
@@ -553,9 +497,8 @@ def main(csv_path):
     
     # 保存數據（自動合併原始數據）
     filename = expander.save_extended_data(extended_data)
-    
-    print(f"\n🎉 擴展完成！請查看 {filename}")
-    print("💡 您現在有完整的2個月歷史數據可以用於訓練系統")
+   
+    return filename
 
 # 最簡單的使用方式
 if __name__ == "__main__":
