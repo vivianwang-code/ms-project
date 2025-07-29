@@ -1,6 +1,6 @@
 Phantom Load Monitoring System - Runtime Summary
 =====================================
-Last updated: 2025-07-20 01:58:34
+Last updated: 2025-07-29 02:28:25
 
 Monitoring Statistics:
 - Total monitoring cycles: 1
@@ -9,7 +9,7 @@ Monitoring Statistics:
 - Normal usage detections: 0 times (0.0%)
 
 System Configuration:
-- Phantom load threshold: 36.55297787861599W
+- Phantom load threshold: 19.764392540116745W
 - Monitor interval: 900 seconds
 - Decision system status: Available
 

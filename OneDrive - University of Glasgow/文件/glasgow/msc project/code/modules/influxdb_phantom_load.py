@@ -7,6 +7,15 @@ import os
 import json
 warnings.filterwarnings('ignore')
 from . import fuzzy_logic_control
+from .fuzzy_logic_control import AntiOscillationFilter
+
+try:
+    from .fuzzy_logic_control import init_decision_evaluator, _decision_evaluator
+    HAS_EVALUATOR = True
+except ImportError:
+    HAS_EVALUATOR = False
+    print("⚠️ DecisionEvaluator module not found")
+
 from utils.logger_config import get_phantom_logger, get_error_logger
 
 
@@ -19,7 +28,7 @@ INFLUX_CONFIG = {
     'token': "VTPT42ftuyixhrddaurUEnBWeVA3vBiZONqf5eDCADAUc-8LZSEoLKJdt98oshQp6ZM7l0HQFsdrzIOnI6-11A==",
     'org': "myorg",
     'bucket': "iotproject",
-    'measurement': "influxdb-JWN-D6",
+    'measurement': "influxdb-JWN-D8",
     'field': "power"
 }
 
@@ -229,6 +238,27 @@ def init_decision_system():
         with redirect_stdout(StringIO()), redirect_stderr(StringIO()):
             _decision_system = DecisionTreeSmartPowerAnalysis()
         print("✅ Decision system initialization completed!")
+
+        # 🆕 新增：初始化防震盪濾波器
+        _decision_system.anti_oscillation_filter = AntiOscillationFilter(
+            hysteresis_enabled=True,
+            phantom_threshold_low=17,
+            phantom_threshold_high=21,
+            decision_cooldown_seconds=30,
+            min_state_duration_minutes=2,
+            stability_check_enabled=True,
+            sleep_mode_detection_enabled=True,
+            sleep_mode_threshold=20,
+            sleep_mode_force_shutdown_minutes=15
+        )
+        print("✅ Anti-oscillation filter initialized!")
+
+        if HAS_EVALUATOR:
+            try:
+                init_decision_evaluator()
+                print("✅ Decision evaluator initialized!")
+            except Exception as e:
+                print(f"⚠️ Decision evaluator initialization failed: {e}")
     
     return _decision_system
 
@@ -422,27 +452,124 @@ def make_phantom_decision(power_value, timestamp=None):
                            f"Habit: {debug_info.get('user_habit_level', '?')}, "
                            f"Confidence: {debug_info.get('confidence_score_level', '?')}")
         
-        return {
-            'decision': decision,
-            'action': final_action,
-            'scores': {
-                'activity': activity_score,
-                'habit': habit_score,
-                'confidence': confidence_score
-            },
-            'levels': {
-                'activity': debug_info.get('device_activity_level', '?'),
-                'habit': debug_info.get('user_habit_level', '?'),
-                'confidence': debug_info.get('confidence_score_level', '?')
-            },
-            'decision_path': debug_info.get('decision_path', ''),
-            'professional_percentage': professional_percentage,
-            'model_sources': {
-                'activity': activity_source,
-                'habit': habit_source,
-                'confidence': confidence_source
+        if hasattr(system, 'anti_oscillation_filter'):
+            filter_result = system.anti_oscillation_filter.filter_decision(
+                original_decision=decision,
+                power_value=power_value,
+                timestamp=timestamp,
+                scores={
+                    'activity': activity_score,
+                    'habit': habit_score,
+                    'confidence': confidence_score
+                }
+            )
+            
+            # 使用濾波後的決策
+            final_decision = filter_result['filtered_decision']
+            final_action = english_actions.get(final_decision, final_decision)
+            
+            # 如果決策被濾波器修改了，記錄原因
+            if filter_result['should_use_filtered']:
+                phantom_logger.info(f"Decision filtered: {decision} -> {final_decision} ({filter_result['filter_reason']})")
+
+            if HAS_EVALUATOR and _decision_evaluator is not None:
+                try:
+                    # 計算fuzzy輸出（簡化版）
+                    fuzzy_output = (activity_score + habit_score + confidence_score) / 3
+                    
+                    # 估算預測功率
+                    predicted_power = power_value * (1 - fuzzy_output * 0.2)
+                    
+                    # 添加記錄
+                    _decision_evaluator.add_decision_record(
+                        timestamp=timestamp,
+                        fuzzy_output=fuzzy_output,
+                        predicted_power=predicted_power,
+                        actual_power=power_value,
+                        decision=final_decision,
+                        confidence_scores={
+                            'activity': activity_score,
+                            'habit': habit_score,
+                            'confidence': confidence_score
+                        }
+                    )
+                except Exception as e:
+                    phantom_logger.warning(f"Decision evaluator recording failed: {e}")
+            
+            return {
+                'decision': final_decision,
+                'action': final_action,
+                'scores': {
+                    'activity': activity_score,
+                    'habit': habit_score,
+                    'confidence': confidence_score
+                },
+                'levels': {
+                    'activity': debug_info.get('device_activity_level', '?'),
+                    'habit': debug_info.get('user_habit_level', '?'),
+                    'confidence': debug_info.get('confidence_score_level', '?')
+                },
+                'decision_path': debug_info.get('decision_path', ''),
+                'professional_percentage': professional_percentage,
+                'model_sources': {
+                    'activity': activity_source,
+                    'habit': habit_source,
+                    'confidence': confidence_source
+                },
+                # 🆕 添加濾波器信息
+                'filter_applied': filter_result['should_use_filtered'],
+                'filter_reason': filter_result['filter_reason'],
+                'original_decision': decision,
+                'power_state': filter_result['power_state']
             }
-        }
+        else:
+
+            if HAS_EVALUATOR and _decision_evaluator is not None:
+                try:
+                    # 計算fuzzy輸出（簡化版）
+                    fuzzy_output = (activity_score + habit_score + confidence_score) / 3
+                    
+                    # 估算預測功率
+                    predicted_power = power_value * (1 - fuzzy_output * 0.2)
+                    
+                    # 添加記錄
+                    _decision_evaluator.add_decision_record(
+                        timestamp=timestamp,
+                        fuzzy_output=fuzzy_output,
+                        predicted_power=predicted_power,
+                        actual_power=power_value,
+                        decision=decision,
+                        confidence_scores={
+                            'activity': activity_score,
+                            'habit': habit_score,
+                            'confidence': confidence_score
+                        }
+                    )
+                except Exception as e:
+                    phantom_logger.warning(f"Decision evaluator recording failed: {e}")
+            
+            # 原有邏輯
+            return {
+                'decision': decision,
+                'action': final_action,
+                'scores': {
+                    'activity': activity_score,
+                    'habit': habit_score,
+                    'confidence': confidence_score
+                },
+                'levels': {
+                    'activity': debug_info.get('device_activity_level', '?'),
+                    'habit': debug_info.get('user_habit_level', '?'),
+                    'confidence': debug_info.get('confidence_score_level', '?')
+                },
+                'decision_path': debug_info.get('decision_path', ''),
+                'professional_percentage': professional_percentage,
+                'model_sources': {
+                    'activity': activity_source,
+                    'habit': habit_source,
+                    'confidence': confidence_source
+                }
+            }
         
     except Exception as e:
         error_logger.error(f"Error occurred during decision process: {e}")
@@ -559,6 +686,12 @@ def print_monitoring_result(result, current_time):
             print(f"    Reason: {result['reason']}")
         
         print(f"    Data Age: {minutes_old:.1f} minutes ago")
+
+        # 🆕 添加濾波器信息顯示
+        if result.get('filter_applied', False):
+            print(f"    🔧 Filter Applied: {result.get('filter_reason', 'Unknown')}")
+            if result.get('original_decision') != result.get('decision'):
+                print(f"    🔄 Original -> Filtered: {result.get('original_decision')} -> {result.get('decision')}")
     
     # Log to files
     print(f"    📝 Results logged to files")
@@ -641,6 +774,13 @@ def main():
                     print(f"    Phantom Load: {phantom_count} times ({phantom_rate:.1f}%)")
                     print(f"    Normal Usage: {normal_count} times ({100-phantom_rate:.1f}%)")
                     print(f"    📁 Records saved to: {LOG_CONFIG['csv_file']}")
+
+                    # 🆕 顯示濾波器狀態
+                    if _decision_system and hasattr(_decision_system, 'anti_oscillation_filter'):
+                        filter_status = _decision_system.anti_oscillation_filter.get_filter_status()
+                        print(f"\n🔧 Anti-oscillation Filter Status:")
+                        print(f"    Power State: {filter_status['current_power_state']}")
+                        print(f"    Sleep Mode: {'Detected' if filter_status.get('sleep_mode_detected', False) else 'Not Detected'}")
             
             phantom_logger.debug(f"Waiting {MONITOR_INTERVAL} seconds for next monitoring cycle...")
             print(f"\n⏳ Waiting {MONITOR_INTERVAL} seconds for next monitoring...")
@@ -663,6 +803,23 @@ def main():
         print(f"    📋 Detailed records: {LOG_CONFIG['json_file']}")
         print(f"    📝 Runtime summary: {LOG_CONFIG['summary_file']}")
         print("👋 Thank you for using!")
+
+        if HAS_EVALUATOR and _decision_evaluator is not None:
+            try:
+                print(f"\n📊 Decision Evaluation Summary:")
+                evaluation_summary = _decision_evaluator.get_evaluation_summary()
+                if 'average_scores' in evaluation_summary:
+                    avg_scores = evaluation_summary['average_scores']
+                    print(f"    Overall Performance: {avg_scores['overall']:.3f}")
+                    print(f"    Stability Score: {avg_scores['stability']:.3f}")
+                    print(f"    Consistency Score: {avg_scores['consistency']:.3f}")
+                
+                # 匯出評估結果
+                eval_file = _decision_evaluator.export_evaluation_results('realtime_evaluation_log.csv')
+                if eval_file:
+                    print(f"    📋 Evaluation results exported: {eval_file}")
+            except Exception as e:
+                print(f"⚠️ Evaluation summary failed: {e}")
         
     except Exception as e:
         error_logger.critical(f"Monitoring system terminated abnormally: {e}")

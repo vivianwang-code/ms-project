@@ -1,20 +1,20 @@
 [
   {
     "monitor_count": 1,
-    "monitor_time": "2025-07-20 01:58:34",
-    "data_time": "2025-07-20T00:45:11.354000+00:00",
-    "power_w": 1.0,
+    "monitor_time": "2025-07-29 01:46:51",
+    "data_time": "2025-07-29T00:40:47.470000+00:00",
+    "power_w": 17.0,
     "type": "phantom_load",
-    "action": "Suggest Shutdown",
-    "decision": "suggest_shutdown",
+    "action": "Delay Decision",
+    "decision": "delay_decision",
     "scores": {
       "activity": 0.05,
-      "habit": 0.2955303798939517,
-      "confidence": 0.1
+      "habit": 0.428125,
+      "confidence": 0.12650259731099084
     },
     "levels": {
       "activity": "low",
-      "habit": "low",
+      "habit": "medium",
       "confidence": "low"
     },
     "professional_percentage": 100.0,
@@ -23,8 +23,64 @@
       "habit": "Professional Model",
       "confidence": "Professional Model"
     },
-    "data_age_minutes": 13.392189566666667,
+    "data_age_minutes": 6.065612083333334,
     "reason": "",
-    "threshold_used": 36.55297787861599
+    "threshold_used": 19.76463193637373
+  },
+  {
+    "monitor_count": 1,
+    "monitor_time": "2025-07-29 02:26:00",
+    "data_time": "2025-07-29T01:10:49.294000+00:00",
+    "power_w": 17.0,
+    "type": "phantom_load",
+    "action": "Delay Decision",
+    "decision": "delay_decision",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.428125,
+      "confidence": 0.1
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 15.196307083333332,
+    "reason": "",
+    "threshold_used": 19.76463193637373
+  },
+  {
+    "monitor_count": 1,
+    "monitor_time": "2025-07-29 02:28:25",
+    "data_time": "2025-07-29T01:10:49.294000+00:00",
+    "power_w": 17.0,
+    "type": "phantom_load",
+    "action": "Delay Decision",
+    "decision": "delay_decision",
+    "scores": {
+      "activity": 0.05,
+      "habit": 0.428125,
+      "confidence": 0.14712403389999962
+    },
+    "levels": {
+      "activity": "low",
+      "habit": "medium",
+      "confidence": "low"
+    },
+    "professional_percentage": 100.0,
+    "model_sources": {
+      "activity": "Professional Model",
+      "habit": "Professional Model",
+      "confidence": "Professional Model"
+    },
+    "data_age_minutes": 17.607438600000002,
+    "reason": "",
+    "threshold_used": 19.764392540116745
   }
 ]

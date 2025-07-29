@@ -18,7 +18,7 @@ def get_historical_data(months=3):
     query = f'''
     from(bucket: "{bucket}")
       |> range(start: -{months}mo)
-      |> filter(fn: (r) => r._measurement == "influxdb-JWN-D8" and r._field == "power")
+      |> filter(fn: (r) => r._measurement == "influxdb-JWN-D6" and r._field == "power")
       |> sort(columns: ["_time"], desc: false)
       |> yield(name: "power_data")
     '''

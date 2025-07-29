@@ -387,7 +387,7 @@ class PowerDataExpander():
         weekend_factor = 1.0
         if is_weekend and self.weekday_patterns:
             weekend_factor = self.weekday_patterns.get(True, {}).get('power_mean', 1) / \
-                           self.weekday_patterns.get(False, {}).get('power_mean', 1)
+                        self.weekday_patterns.get(False, {}).get('power_mean', 1)
         
         # 隨機選擇狀態
         rand = np.random.random()
@@ -497,10 +497,11 @@ def main(csv_path):
     
     # 保存數據（自動合併原始數據）
     filename = expander.save_extended_data(extended_data)
-   
+
     return filename
 
 # 最簡單的使用方式
 if __name__ == "__main__":
     csv_path = "data/historical_power.csv"  # 替換為您的CSV檔案路徑
     main(csv_path)
+    
