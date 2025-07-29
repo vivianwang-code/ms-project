@@ -3,9 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from datetime import datetime, timedelta
-import kmeans  
+import kmeans_filter as kmeans_filter  # 使用新的 kmeans_filter
+# import kmeans as kmeans_filter  # 使用新的 kmeans_filter
 
-#load file
 def load_data(file_path):
     print('loading file')
 
@@ -43,9 +43,7 @@ def load_data(file_path):
         print(f"missing field : {df['_field'].isna().sum()}")
         #ideally : all equals to 0
 
-
         ######## timestamp ##########
-
         print('\n==== timestamp ====')
         df['timestamp'] = pd.to_datetime(df['_time'])
         print(df['timestamp'])
@@ -58,14 +56,12 @@ def load_data(file_path):
         intervals = df['time_diff_seconds'].dropna()  #analyze intervals
 
         print(intervals)
-
         print((intervals.max())//60)
         print((intervals.min())//60)
 
         if ((intervals.max())//60) == ((intervals.min())//60):
             print('\ninterval check pass !!!')
             print(f'interval : {intervals/60:.2f} min')
-
         else:
             unequal_interval_plot(df)
             print('\ninterval check fail !!!')
@@ -73,11 +69,8 @@ def load_data(file_path):
             print(f"Median interval: {intervals.median():.1f} seconds")
             print(f"Min interval: {intervals.min():.1f} seconds")
             print(f"Max interval: {intervals.max():.1f} seconds")
-            
-
 
         ######## power value ##########
-        
         print('\n==== power ====')
         df['power'] = pd.to_numeric(df['_value'])
         print(f"min : {df['power'].min():.2f}W") 
@@ -96,36 +89,55 @@ def load_data(file_path):
 
         return df
 
-#kmeans analysis
 def kmeans_analysis(df):
-    
     print('\n==== kmeans analysis ====')
-    df['power_state'] = kmeans.get_power_classification(df)
+    
+    # 使用新的分類方法
+    df['power_state'] = kmeans_filter.get_power_classification(df, threshold=1.5, k=3)
+    
+    # 為了兼容性，創建一個包含 power_category 的副本
     df_kmeans = df.copy()
     df_kmeans['power_category'] = df['power_state']
-    df_kmeans_result = kmeans.kmeans_power(df_kmeans)
-    kmeans.plot_kmeans_power(df_kmeans_result)
-    kmeans.plot_power_classification(df_kmeans_result)
+    
+    # 使用新的完整分類函數來獲取詳細結果和圖表
+    df_kmeans_result, category_stats = kmeans_filter.get_power_classification_full(df_kmeans, threshold=1.5, k=3)
+    
+    # 繪製圖表
+    kmeans_filter.plot_new_classification_results(df_kmeans_result, category_stats)
+    kmeans_filter.plot_step_by_step_process(df, df_kmeans_result, threshold=1.5)
 
     return df
 
-#kmeans classification
 def binary_classification(df):
-
     print('==== power binary classification ====')
     
-    #off
-    df['is_off'] = (df['power_state'] == 'non use')
+    # 新的分類標籤映射
+    classification_mapping = {
+        'no-use': {'off': True, 'phantom_load': False, 'light_use': False, 'regular_use': False},
+        'phantom': {'off': False, 'phantom_load': True, 'light_use': False, 'regular_use': False},
+        'light': {'off': False, 'phantom_load': False, 'light_use': True, 'regular_use': False},
+        'regular': {'off': False, 'phantom_load': False, 'light_use': False, 'regular_use': True}
+    }
     
-    #phantom load
-    df['is_phantom_load'] = (df['power_state'] == 'phantom load')
+    # 創建二元分類列
+    df['is_off'] = False
+    df['is_phantom_load'] = False
+    df['is_light_use'] = False
+    df['is_regular_use'] = False
+    df['is_on'] = False
     
-    #on : light use / regular use
-    df['is_light_use'] = (df['power_state'] == 'light use')
-    df['is_regular_use'] = (df['power_state'] == 'regular use')
+    # 根據新的分類標籤設置二元分類
+    for category, mapping in classification_mapping.items():
+        mask = df['power_state'] == category
+        df.loc[mask, 'is_off'] = mapping['off']
+        df.loc[mask, 'is_phantom_load'] = mapping['phantom_load']
+        df.loc[mask, 'is_light_use'] = mapping['light_use']
+        df.loc[mask, 'is_regular_use'] = mapping['regular_use']
+    
+    # 設置 is_on (任何功率 > 0)
     df['is_on'] = (df['power'] > 0)
 
-    #print statistics
+    # 打印統計結果
     print(f"Off: {df['is_off'].sum()} ({df['is_off'].mean()*100:.1f}%)")
     print(f"Phantom Load: {df['is_phantom_load'].sum()} ({df['is_phantom_load'].mean()*100:.1f}%)")
     print(f"Light Use: {df['is_light_use'].sum()} ({df['is_light_use'].mean()*100:.1f}%)")
@@ -134,9 +146,7 @@ def binary_classification(df):
     
     return df
 
-#power distribution
 def power_distribution(df):
-
     print('\n==== power distribution ====')
     power_statistic = df['power'].describe()
     print("Power Statistics:")
@@ -169,7 +179,6 @@ def power_distribution(df):
     
     return df
 
-#unequal interval plot
 def unequal_interval_plot(df):
     print('\n==== unequal interval plot ====')
 
@@ -193,7 +202,6 @@ def unequal_interval_plot(df):
     
     plt.tight_layout()
     plt.show()
-
 
 def quick_find_outliers(df, threshold_seconds=1800):
     import pandas as pd
@@ -254,9 +262,7 @@ def quick_find_outliers(df, threshold_seconds=1800):
     
     return large_gaps
 
-#output file
 def save_data_csv(df, output_path='data_after_preprocessing.csv'):
-    
     print('\n==== Saving Processed Data ====')
 
     output_columns = [
@@ -276,13 +282,9 @@ def save_data_csv(df, output_path='data_after_preprocessing.csv'):
     return df_output
 
 if __name__ == "__main__":
-
-    # file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/6CL-S8 television 15min.csv"
-
-    # file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/6CL-S2_washing_machine_15min.csv"
-    file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/iotproject_D8.csv"
+    # 測試文件路徑
+    file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/20250707_20250728_D8.csv"
     
-
     print('====================== data preprocessing ======================')
 
     df = load_data(file_path)

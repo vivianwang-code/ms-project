@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 import warnings
+from collections import deque
 warnings.filterwarnings('ignore')
 
 ### 找三個model ###
@@ -36,10 +37,383 @@ except ImportError:
     HAS_CONFIDENCE_SCORE = False
     print("⚠️  confidence_score 模組未找到")
 
+try:
+    from decision_evaluator import DecisionEvaluator
+    HAS_EVALUATOR = True
+    print("✅ DecisionEvaluator模組載入成功")
+except ImportError:
+    HAS_EVALUATOR = False
+    print("⚠️ 警告：DecisionEvaluator模組未找到，評估功能將被禁用")
+
+_decision_evaluator = None
+_oscillation_detector = None
+
+def init_decision_evaluator():
+    """初始化決策評估器"""
+    global _decision_evaluator
+    
+    if not HAS_EVALUATOR:
+        return None
+    
+    if _decision_evaluator is None:
+        _decision_evaluator = DecisionEvaluator(
+            window_size_minutes=45,
+            evaluation_interval_minutes=30
+        )
+        print("✅ DecisionEvaluator初始化完成")
+    
+    return _decision_evaluator
+
+def estimate_predicted_power(actual_power, fuzzy_output):
+    """估算預測功率值（用於評估器）"""
+    if fuzzy_output > 0.7:
+        predicted_power = actual_power * 0.9
+    elif fuzzy_output < 0.3:
+        predicted_power = actual_power * 1.1
+    else:
+        predicted_power = actual_power
+    
+    # 添加一些隨機噪聲來模擬預測不確定性
+    noise = np.random.normal(0, actual_power * 0.05)
+    predicted_power += noise
+    return max(0, predicted_power)
+
+def calculate_fuzzy_output(activity_score, habit_score, confidence_score, power_value):
+    """計算fuzzy控制器輸出（0-1）"""
+    # 基於三個分數計算fuzzy輸出
+    activity_weight = 0.4
+    habit_weight = 0.4
+    confidence_weight = 0.2
+    
+    # 將活動和習慣分數反轉（分數越低越可能關閉）
+    fuzzy_output = (
+        activity_weight * (1 - activity_score) +
+        habit_weight * (1 - habit_score) +
+        confidence_weight * confidence_score
+    )
+    
+    # 根據功率值調整
+    if power_value < 36:  # phantom load
+        fuzzy_output = min(1.0, fuzzy_output + 0.2)  # 增加關閉傾向
+    
+    return np.clip(fuzzy_output, 0, 1)
+
+class AntiOscillationFilter:
+    def __init__(self, 
+                 hysteresis_enabled=True,
+                 phantom_threshold_low=17,
+                 phantom_threshold_high=21,
+                 decision_cooldown_seconds=30,
+                 min_state_duration_minutes=1,
+                 stability_check_enabled=False,
+                 
+                 # 🆕 新增參數 - 針對休眠狀態檢測
+                 sleep_mode_detection_enabled=True,
+                 sleep_mode_threshold=25,
+                 sleep_mode_force_shutdown_minutes=8):
+        
+        self.hysteresis_enabled = hysteresis_enabled
+        self.phantom_low = phantom_threshold_low
+        self.phantom_high = phantom_threshold_high
+        self.decision_cooldown = timedelta(seconds=decision_cooldown_seconds)
+        self.min_state_duration = timedelta(minutes=min_state_duration_minutes)
+        self.stability_check_enabled = stability_check_enabled
+        
+        # 🆕 休眠模式檢測參數
+        self.sleep_mode_detection_enabled = sleep_mode_detection_enabled
+        self.sleep_mode_threshold = sleep_mode_threshold
+        self.sleep_mode_force_minutes = sleep_mode_force_shutdown_minutes
+        
+        self.last_decision_time = None
+        self.last_decision = None
+        self.current_power_state = 'unknown'
+        self.state_start_time = None
+        self.recent_powers = deque(maxlen=10)
+        
+        # 🆕 新增狀態追蹤
+        self.power_history = deque(maxlen=50)
+        self.timestamp_history = deque(maxlen=50)
+        self.sleep_mode_start_time = None
+        
+        print(f"✅ 增強型防震盪濾波器初始化")
+        print(f"   - 遲滯閾值: {phantom_threshold_low}W ~ {phantom_threshold_high}W")
+        print(f"   - 休眠檢測: {'啟用' if sleep_mode_detection_enabled else '禁用'}")
+        if sleep_mode_detection_enabled:
+            print(f"     * 休眠閾值: <{sleep_mode_threshold}W")
+            print(f"     * 強制關機時間: {sleep_mode_force_shutdown_minutes}分鐘")
+    
+    def filter_decision(self, original_decision, power_value, timestamp, scores=None):
+        # 更新歷史記錄
+        self.recent_powers.append(power_value)
+        self.power_history.append(power_value)
+        self.timestamp_history.append(timestamp)
+        
+        # 🆕 休眠模式檢測
+        sleep_mode_result = self._detect_sleep_mode(timestamp, power_value)
+        
+        # 🆕 如果檢測到需要強制關機的休眠狀態
+        if sleep_mode_result['force_shutdown']:
+            if self._is_likely_sleep_time(timestamp):
+                suggested_decision = 'suggest_shutdown'
+            elif self._is_work_hours(timestamp):
+                suggested_decision = 'send_notification'  # 工作時間比較保守
+            else:
+                suggested_decision = 'suggest_shutdown'
+            
+            return {
+                'filtered_decision': suggested_decision,
+                'original_decision': original_decision,
+                'filter_reason': f'時間感知休眠檢測({sleep_mode_result["duration_minutes"]:.1f}分鐘)',
+                'power_state': 'sleep_mode',
+                'should_use_filtered': True,
+                'sleep_mode_detected': True
+            }
+        
+        # 🆕 如果是低功率且原決策是keep_on，需要修正
+        if (power_value < self.sleep_mode_threshold and 
+            original_decision == 'keep_on' and
+            sleep_mode_result['is_sleep_mode'] and
+            sleep_mode_result['duration_minutes'] > 10):  # 需要持續10分鐘以上
+            
+            # 先改為通知，而不是直接關機
+            if power_value < 16:  # 只有極低功率才直接建議關機
+                filtered_decision = 'suggest_shutdown'
+            else:
+                filtered_decision = 'send_notification'  # 其他情況發通知
+            
+            return {
+                'filtered_decision': filtered_decision,
+                'original_decision': original_decision,
+                'filter_reason': f'長時間低功率修正(功率{power_value:.1f}W, {sleep_mode_result["duration_minutes"]:.1f}分鐘)',
+                'power_state': 'sleep_mode_correction',
+                'should_use_filtered': True,
+                'sleep_mode_detected': True
+            }
+        
+        # 檢查冷卻期
+        if self._in_cooldown_period(timestamp):
+            return {
+                'filtered_decision': 'delay_decision',
+                'original_decision': original_decision,
+                'filter_reason': '決策冷卻期內',
+                'power_state': self.current_power_state,
+                'should_use_filtered': True,
+                'sleep_mode_detected': sleep_mode_result['is_sleep_mode']
+            }
+        
+        # 更新功率狀態
+        self._update_power_state(power_value, timestamp)
+        
+        # 檢查持續時間
+        if not self._meets_minimum_duration(timestamp):
+            return {
+                'filtered_decision': 'delay_decision',
+                'original_decision': original_decision,
+                'filter_reason': '狀態持續時間不足',
+                'power_state': self.current_power_state,
+                'should_use_filtered': True,
+                'sleep_mode_detected': sleep_mode_result['is_sleep_mode']
+            }
+        
+        # 檢查穩定性
+        if self.stability_check_enabled and not self._is_power_stable():
+            # 🆕 如果在休眠模式中震盪，直接建議關機
+            if sleep_mode_result['is_sleep_mode']:
+                return {
+                    'filtered_decision': 'suggest_shutdown',
+                    'original_decision': original_decision,
+                    'filter_reason': '休眠模式中的功率震盪',
+                    'power_state': 'sleep_mode_unstable',
+                    'should_use_filtered': True,
+                    'sleep_mode_detected': True
+                }
+            else:
+                return {
+                    'filtered_decision': 'delay_decision',
+                    'original_decision': original_decision,
+                    'filter_reason': '功率不穩定',
+                    'power_state': self.current_power_state,
+                    'should_use_filtered': True,
+                    'sleep_mode_detected': False
+                }
+        
+        # 根據功率狀態調整決策
+        filtered_decision = self._adjust_decision_by_power_state(original_decision, sleep_mode_result)
+
+        valid_decisions = ['suggest_shutdown', 'send_notification', 'delay_decision', 'keep_on']
+        if filtered_decision not in valid_decisions:
+            print(f"⚠️ 警告：濾波器返回了無效決策 '{filtered_decision}', 改為 'delay_decision'")
+            filtered_decision = 'delay_decision'
+        
+        # 更新決策歷史
+        if filtered_decision != 'delay_decision':
+            self.last_decision = filtered_decision
+            self.last_decision_time = timestamp
+        
+        return {
+            'filtered_decision': filtered_decision,
+            'original_decision': original_decision,
+            'filter_reason': '濾波完成',
+            'power_state': self.current_power_state,
+            'should_use_filtered': filtered_decision != original_decision,
+            'sleep_mode_detected': sleep_mode_result['is_sleep_mode']
+        }
+        
+    
+    def _detect_sleep_mode(self, current_time, current_power):
+        """🆕 檢測休眠模式"""
+        if not self.sleep_mode_detection_enabled:
+            return {
+                'is_sleep_mode': False,
+                'duration_minutes': 0,
+                'force_shutdown': False
+            }
+        
+        # 檢查當前功率是否為休眠狀態
+        is_current_sleep = current_power < self.sleep_mode_threshold
+        
+        # 更新休眠開始時間
+        if is_current_sleep:
+            if self.sleep_mode_start_time is None:
+                self.sleep_mode_start_time = current_time
+        else:
+            self.sleep_mode_start_time = None
+        
+        # 計算休眠持續時間
+        duration_minutes = 0
+        if self.sleep_mode_start_time:
+            duration = current_time - self.sleep_mode_start_time
+            duration_minutes = duration.total_seconds() / 60
+        
+        # 判斷是否需要強制關機
+        force_shutdown = (duration_minutes >= self.sleep_mode_force_minutes and current_power < 18)
+        
+        return {
+            'is_sleep_mode': is_current_sleep,
+            'duration_minutes': duration_minutes,
+            'force_shutdown': force_shutdown
+        }
+    
+    def _adjust_decision_by_power_state(self, original_decision, sleep_mode_result):
+        """根據功率狀態調整決策 - 加入休眠模式考慮"""
+        
+        # 🆕 如果檢測到休眠模式，優先處理
+        # 🔧 更漸進的休眠模式處理
+        if sleep_mode_result['is_sleep_mode']:
+            duration = sleep_mode_result['duration_minutes']
+            
+            if duration > 12:  # 超過12分鐘才考慮修正
+                if original_decision == 'keep_on':
+                    # 根據功率值決定修正強度
+                    if self.recent_powers and np.mean(list(self.recent_powers)[-3:]) < 16:
+                        return 'suggest_shutdown'  # 極低功率才直接關機
+                    else:
+                        return 'send_notification'  # 其他情況發通知
+                elif original_decision == 'delay_decision':
+                    return 'send_notification'
+            elif duration > 6:  # 6-12分鐘之間，輕微修正
+                if original_decision == 'keep_on' and self.recent_powers:
+                    recent_avg = np.mean(list(self.recent_powers)[-3:])
+                    if recent_avg < 16:  # 只修正極低功率的情況
+                        return 'send_notification'
+        
+        # 原有邏輯
+        if self.current_power_state == 'uncertain':
+            if original_decision in ['suggest_shutdown', 'send_notification']:
+                return 'delay_decision'
+        
+        elif self.current_power_state == 'phantom':
+            if len(self.recent_powers) >= 3:
+                recent_avg = np.mean(list(self.recent_powers)[-3:])
+                # 🆕 使用休眠閾值進行更積極的判斷
+                if recent_avg < self.sleep_mode_threshold:
+                    if original_decision == 'keep_on':
+                        return 'suggest_shutdown'  # 直接建議關機
+                elif 18 <= recent_avg <= 22:
+                    if original_decision == 'keep_on':
+                        return 'send_notification'  # 改為通知
+        
+        elif self.current_power_state == 'active':
+            if original_decision == 'suggest_shutdown':
+                return 'send_notification'
+        
+        return original_decision
+    
+    def get_filter_status(self):
+        """獲取濾波器狀態 - 包含休眠檢測狀態"""
+        sleep_info = self._detect_sleep_mode(datetime.now(), 
+                                           self.recent_powers[-1] if self.recent_powers else 0)
+        
+        return {
+            'current_power_state': self.current_power_state,
+            'state_duration_minutes': (
+                (datetime.now() - self.state_start_time).total_seconds() / 60 
+                if self.state_start_time else 0
+            ),
+            'last_decision': self.last_decision,
+            'recent_powers': list(self.recent_powers),
+            'is_in_cooldown': self._in_cooldown_period(datetime.now()) if self.last_decision_time else False,
+            'sleep_mode_detected': sleep_info['is_sleep_mode'],
+            'sleep_duration_minutes': sleep_info['duration_minutes']
+        }
+    
+    # 保留原有方法
+    def _in_cooldown_period(self, timestamp):
+        if self.last_decision_time is None:
+            return False
+        return timestamp - self.last_decision_time < self.decision_cooldown
+    
+    def _update_power_state(self, power_value, timestamp):
+        if not self.hysteresis_enabled:
+            new_state = 'phantom' if power_value < 19 else 'active'
+        else:
+            if power_value <= self.phantom_low:
+                new_state = 'phantom'
+            elif power_value >= self.phantom_high:
+                new_state = 'active'
+            else:
+                new_state = self.current_power_state if self.current_power_state in ['phantom', 'active'] else 'uncertain'
+        
+        if new_state != self.current_power_state:
+            self.current_power_state = new_state
+            self.state_start_time = timestamp
+    
+    def _meets_minimum_duration(self, timestamp):
+        if self.state_start_time is None:
+            return False
+        duration = timestamp - self.state_start_time
+        return duration >= self.min_state_duration
+    
+    def _is_power_stable(self):
+        if len(self.recent_powers) < 3:
+            return True
+        
+        recent_list = list(self.recent_powers)[-5:]
+        if len(recent_list) < 3:
+            return True
+        
+        std_dev = np.std(recent_list)
+        mean_power = np.mean(recent_list)
+        coefficient_of_variation = std_dev / mean_power if mean_power > 0 else 0
+        return coefficient_of_variation < 0.1 or std_dev < 2.0
+    
+    def _is_likely_sleep_time(self, timestamp):
+        """判斷是否為可能的睡眠時間"""
+        hour = timestamp.hour
+        # 深夜到早晨 (23:00-07:00) 更容易接受關機建議
+        return hour >= 23 or hour <= 7
+
+    def _is_work_hours(self, timestamp):
+        """判斷是否為工作時間"""
+        hour = timestamp.hour
+        weekday = timestamp.weekday()
+        # 工作日的工作時間
+        return weekday < 5 and 9 <= hour <= 17
+
 
 class DecisionTreeSmartPowerAnalysis:
     def __init__(self):
-        self.data_file = 'C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/extended_power_data_2months.csv'
+        self.data_file = 'C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/complete_power_data_with_history.csv'
         
         print("start decision tree smart power analysis...")
         
@@ -50,12 +424,31 @@ class DecisionTreeSmartPowerAnalysis:
         self.device_activity_model = None
         self.user_habit_model = None
         self.confidence_model = None
+
+        init_decision_evaluator()
+
+        self.anti_oscillation_filter = AntiOscillationFilter(
+            hysteresis_enabled=True,
+            phantom_threshold_low=17,
+            phantom_threshold_high=21,
+            decision_cooldown_seconds=30,
+            min_state_duration_minutes=2,
+            stability_check_enabled=True,
+
+            sleep_mode_detection_enabled=True,
+            sleep_mode_threshold=20,              # 休眠閾值
+            sleep_mode_force_shutdown_minutes=15
+        )
         
         # 決策統計
         self.decision_stats = {
             'total_decisions': 0,
             'decision_paths': {},  # 記錄每種決策路徑
-            'level_combinations': {}  # 記錄每種等級組合
+            'level_combinations': {},  # 記錄每種等級組合
+            'filtered_decisions': 0,        # 🆕 添加這行
+            'oscillation_prevented': 0, 
+            'sleep_mode_corrections': 0,      # 🆕 添加這行
+            'sleep_mode_detections': 0  
         }
         
         # 訓練設備活動模型
@@ -99,8 +492,11 @@ class DecisionTreeSmartPowerAnalysis:
             'keep_on': 0,
             'send_notification': 0,
             'delay_decision': 0,
-            'total_opportunities': 0
+            'total_opportunities': 0,
+            'error': 0
         }
+
+        
 
     def _generate_phantom_load_opportunities(self, df):
 
@@ -109,6 +505,7 @@ class DecisionTreeSmartPowerAnalysis:
 
         # df['is_phantom'] = df['power'] < 92
         # df['is_phantom'] = df['power'] < 60
+        # df['is_phantom'] = df['power'] < 36
         df['is_phantom'] = df['power'] < 36
         print(f'phantom load (< 60W) : {len(df[df["is_phantom"]])} counts')
 
@@ -174,6 +571,8 @@ class DecisionTreeSmartPowerAnalysis:
         
         # 合理的智能決策樹邏輯 - 基於實際使用場景
         decision_path = []
+
+        
         decision = "delay_decision"  # 默認值
         
         if user_habit == "low":  # 很少使用設備
@@ -448,11 +847,80 @@ class DecisionTreeSmartPowerAnalysis:
                     activity_score, habit_score, confidence_score, features
                 )
 
-                if decision in self.results:
-                    self.results[decision] += 1
+                filter_result = self.anti_oscillation_filter.filter_decision(
+                original_decision=decision,
+                power_value=features['power_watt'],
+                timestamp=timestamp,
+                scores={
+                    'activity': activity_score,
+                    'habit': habit_score,
+                    'confidence': confidence_score
+                }
+                )
+
+                # 使用濾波後的決策
+                final_decision = filter_result['filtered_decision']
+
+                # 統計濾波效果
+                if filter_result['should_use_filtered']:
+                    self.decision_stats['filtered_decisions'] += 1
+                    if filter_result['filter_reason'] in ['決策冷卻期內', '功率不穩定']:
+                        self.decision_stats['oscillation_prevented'] += 1
+                    
+                    # 🆕 統計休眠模式相關修正
+                    if 'sleep_mode_detected' in filter_result and filter_result['sleep_mode_detected']:
+                        self.decision_stats['sleep_mode_detections'] += 1
+                    
+                    if '休眠' in filter_result['filter_reason']:
+                        self.decision_stats['sleep_mode_corrections'] += 1
+                        print(f"🛌 休眠模式修正: {timestamp.strftime('%H:%M')} - {filter_result['filter_reason']}")
+
+                # 添加濾波信息到debug_info
+                debug_info['filter_applied'] = filter_result['should_use_filtered']
+                debug_info['filter_reason'] = filter_result['filter_reason']
+                debug_info['power_state'] = filter_result['power_state']
+                debug_info['original_decision'] = decision
+
+
+                if HAS_EVALUATOR and _decision_evaluator is not None:
+                    try:
+                        # 計算fuzzy輸出
+                        fuzzy_output = calculate_fuzzy_output(
+                            activity_score, habit_score, confidence_score, 
+                            features['power_watt']
+                        )
+                        
+                        # 估算預測功率
+                        predicted_power = estimate_predicted_power(
+                            features['power_watt'], 
+                            fuzzy_output
+                        )
+                        
+                        # 添加決策記錄到評估器
+                        _decision_evaluator.add_decision_record(
+                            timestamp=timestamp,
+                            fuzzy_output=fuzzy_output,
+                            predicted_power=predicted_power,
+                            actual_power=features['power_watt'],
+                            decision=final_decision,
+                            confidence_scores={
+                                'activity': activity_score,
+                                'habit': habit_score,
+                                'confidence': confidence_score
+                            }
+                        )
+                    except Exception as e:
+                        print(f"評估器記錄錯誤 (opportunity {i+1}): {e}")
+
+
+                if final_decision in self.results:
+                    self.results[final_decision] += 1
                 else:
-                    print(f"   ⚠️ Unknown decision result: {decision}")
-                    self.results['delay_decision'] += 1
+                    print(f"   ⚠️ Unknown decision result: {final_decision}")
+                    # 🔧 確保results字典有所有可能的決策類型
+                    if final_decision not in self.results:
+                        self.results[final_decision] = 0
+                    self.results[final_decision] += 1
 
                 result = {
                     'opportunity': opp,
@@ -460,7 +928,7 @@ class DecisionTreeSmartPowerAnalysis:
                     'activity_score': activity_score,
                     'user_habit_score': habit_score,
                     'confidence_score': confidence_score,
-                    'decision': decision,
+                    'decision': final_decision,
                     'debug_info': debug_info
                 }
                 decision_results.append(result)
@@ -505,6 +973,15 @@ class DecisionTreeSmartPowerAnalysis:
         """打印決策樹統計信息"""
         print(f"\n🌳 決策樹統計分析:")
         print(f"   總決策次數: {self.decision_stats['total_decisions']}")
+
+        print(f"\n🔧 防震盪濾波器統計:")
+        print(f"   被濾波的決策: {self.decision_stats['filtered_decisions']}")
+        print(f"   防止的震盪: {self.decision_stats['oscillation_prevented']}")
+        print(f"   休眠模式檢測: {self.decision_stats.get('sleep_mode_detections', 0)}")      # 🆕 添加
+        print(f"   休眠模式修正: {self.decision_stats.get('sleep_mode_corrections', 0)}")      # 🆕 添加
+        filter_rate = (self.decision_stats['filtered_decisions'] / 
+                    max(1, self.decision_stats['total_decisions']) * 100)
+        print(f"   濾波率: {filter_rate:.1f}%")
         
         # 打印決策分布
         total_decisions = sum(self.results.values()) - self.results['phantom_load_detected'] - self.results['total_opportunities']
@@ -545,168 +1022,108 @@ class DecisionTreeSmartPowerAnalysis:
         }
 
     def _estimate_energy_saving(self, decision_results, df):
-        """計算詳細的節能效果並視覺化（含英國電費計算）"""
+        """修正版節能計算 - 解決節能比例過低問題"""
+        
         # 計算數據期間資訊
         period_info = self._calculate_data_period_info(df)
         total_days = period_info['total_days']
         
+        print(f"\n🔍 節能計算詳細分析（修正版）：")
+        print(f"   📅 分析期間: {total_days} 天")
+        print(f"   📊 總決策數量: {len(decision_results)}")
+        
+        # 詳細分析每個決策的能耗
         total_baseline_kwh = 0
-        notification_kwh = 0
-
-        decision_breakdown = {
-            'suggest_shutdown': {'count': 0, 'kwh': 0},
-            'send_notification': {'count': 0, 'kwh': 0},
-            'keep_on': {'count': 0, 'kwh': 0},
-            'delay_decision': {'count': 0, 'kwh': 0}
-        }
-
-        # 計算各決策的能耗
-        for result in decision_results:
+        shutdown_saved_kwh = 0      # 直接關機節省的
+        notification_involved_kwh = 0  # 通知涉及的電量
+        keep_on_kwh = 0            # 繼續使用的
+        delay_kwh = 0              # 延遲決策的
+        
+        for i, result in enumerate(decision_results):
             opp = result['opportunity']
             decision = result['decision']
-
-            duration_hr = (opp['end_time'] - opp['start_time']).total_seconds() / 3600
-            power_watt = opp.get('power_watt', 100)
-            energy_kwh = power_watt * duration_hr / 1000
-
-            total_baseline_kwh += energy_kwh
-
-            if decision in decision_breakdown:
-                decision_breakdown[decision]['count'] += 1
-                decision_breakdown[decision]['kwh'] += energy_kwh
-
-            if decision == 'send_notification':
-                notification_kwh += energy_kwh
-
-        # 轉換為日平均值
-        daily_baseline_kwh = total_baseline_kwh / total_days
-        daily_notification_kwh = notification_kwh / total_days
-        
-        # 計算不同 send notification 響應率的節能效果
-        notification_count = decision_breakdown['send_notification']['count']
-        
-        # 用戶響應場景
-        user_response_scenarios = {
-            '用戶100%同意關機': 1.0,
-            '用戶80%同意關機': 0.8,
-            '用戶60%同意關機': 0.6,
-            '用戶40%同意關機': 0.4,
-            '用戶20%同意關機': 0.2,
-            '用戶0%同意關機': 0.0
-        }
-
-        print(f"\n💡 決策樹版詳細節能分析（基於 {total_days} 天數據）：")
-        print(f"   🔋 系統原始預估耗電量：{total_baseline_kwh:.2f} kWh (日均: {daily_baseline_kwh:.2f} kWh)")
-        print(f"   💰 系統原始預估電費：£{total_baseline_kwh * self.uk_electricity_rate:.3f} (日均: £{daily_baseline_kwh * self.uk_electricity_rate:.3f})")
-        
-        print(f"\n📊 決策分類統計：")
-        for decision, data in decision_breakdown.items():
-            if data['count'] > 0:
-                percentage = (data['kwh'] / total_baseline_kwh * 100)
-                daily_kwh = data['kwh'] / total_days
-                daily_cost = daily_kwh * self.uk_electricity_rate
-                print(f"   📌 {decision}: {data['count']} 次, {data['kwh']:.2f} kWh ({percentage:.1f}%) | 日均: {daily_kwh:.3f} kWh (£{daily_cost:.3f})")
-
-        # 固定節能（suggest_shutdown）
-        fixed_saving_kwh = decision_breakdown['suggest_shutdown']['kwh']
-        daily_fixed_saving_kwh = fixed_saving_kwh / total_days
-        
-        print(f"\n✅ 確定節能效果（suggest_shutdown）：")
-        print(f"   💡 確定節省電量：{fixed_saving_kwh:.2f} kWh (日均: {daily_fixed_saving_kwh:.2f} kWh)")
-        print(f"   💰 確定節省電費：£{fixed_saving_kwh * self.uk_electricity_rate:.3f} (日均: £{daily_fixed_saving_kwh * self.uk_electricity_rate:.3f})")
-
-        # Send notification 情況分析
-        notification_scenarios = {}
-        if notification_count > 0:
-            print(f"\n🔔 Send Notification 情況分析：")
-            print(f"   📬 總通知次數：{notification_count} 次")
-            print(f"   ⚡ 涉及電量：{notification_kwh:.2f} kWh (日均: {daily_notification_kwh:.2f} kWh)")
-            print(f"   💰 涉及電費：£{notification_kwh * self.uk_electricity_rate:.3f} (日均: £{daily_notification_kwh * self.uk_electricity_rate:.3f})")
-            print(f"\n   📈 不同用戶響應率的總節能效果：")
             
-            for scenario, response_rate in user_response_scenarios.items():
-                notification_saving = notification_kwh * response_rate
-                total_scenario_saving = fixed_saving_kwh + notification_saving
-                remaining_consumption = total_baseline_kwh - total_scenario_saving
-                savings_percentage = (total_scenario_saving / total_baseline_kwh * 100)
-                
-                # 日平均和年度預估
-                daily_total_saving = total_scenario_saving / total_days
-                annual_saving_kwh = daily_total_saving * 365
-                annual_saving_cost = annual_saving_kwh * self.uk_electricity_rate
-                
-                notification_scenarios[scenario] = {
-                    'response_rate': response_rate,
-                    'notification_saved_kwh': notification_saving,
-                    'total_saved_kwh': total_scenario_saving,
-                    'remaining_kwh': remaining_consumption,
-                    'savings_percentage': savings_percentage,
-                    'daily_saved_kwh': daily_total_saving,
-                    'annual_saved_kwh': annual_saving_kwh,
-                    'annual_saved_cost': annual_saving_cost
-                }
-                
-                print(f"     🎯 {scenario}:")
-                print(f"        節省: {total_scenario_saving:.2f} kWh (節能率: {savings_percentage:.1f}%)")
-                print(f"        日均節省: {daily_total_saving:.3f} kWh | 年度節省: {annual_saving_kwh:.0f} kWh (£{annual_saving_cost:.0f})")
-                print(f"        剩餘耗電: {remaining_consumption:.2f} kWh")
-        else:
-            print(f"\n🔔 本次分析無 Send Notification 決策")
-
-        actual_scenarios = notification_scenarios['用戶100%同意關機']  # 或你希望的響應率
-
-        total_saving_kwh = fixed_saving_kwh + actual_scenarios['notification_saved_kwh']
-        after_system_kwh = total_baseline_kwh - total_saving_kwh
-        saving_percent = total_saving_kwh / total_baseline_kwh * 100
-
-        print(f"\n=== 💡 加入系統前後的能耗對比 ===")
-        print(f"⚡ 原始總耗電量: {total_baseline_kwh:.2f} kWh")
-        print(f"✅ 加入系統後預估耗電量: {after_system_kwh:.2f} kWh")
-        print(f"💸 節省電量: {total_saving_kwh:.2f} kWh")
-        print(f"📉 節能比例: {saving_percent:.1f}%")
-
-        # 假設你用的是 100% 用戶回應的情境
-        response_scenario = notification_scenarios.get('用戶100%同意關機')
-        if response_scenario:
-            daily_total_saving = response_scenario['daily_saved_kwh']
-            daily_after_system_kwh = daily_baseline_kwh - daily_total_saving
-            saving_percent = daily_total_saving / daily_baseline_kwh * 100
-
-            print(f"\n=== 📉 每日能耗對比分析 ===")
-            print(f"🔋 每日原始耗能: {daily_baseline_kwh:.3f} kWh")
-            print(f"✅ 每日系統介入後預估耗能: {daily_after_system_kwh:.3f} kWh")
-            print(f"💡 每日節省: {daily_total_saving:.3f} kWh")
-            print(f"📈 每日節能率: {saving_percent:.1f}%")
-
-
-
-        # 生成視覺化圖表
-        self._create_energy_saving_visualization(
-            decision_breakdown, 
-            notification_scenarios, 
-            total_baseline_kwh,
-            fixed_saving_kwh,
-            notification_kwh,
-            total_days
-        )
-
-        # 打印最終報告
-        self._print_final_phantom_load_report(
-            total_baseline_kwh, 
-            fixed_saving_kwh, 
-            notification_kwh, 
-            notification_scenarios,
-            total_days
-        )
-
-        return {
-            'baseline_kwh': total_baseline_kwh,
-            'fixed_saved_kwh': fixed_saving_kwh,
-            'notification_kwh': notification_kwh,
-            'decision_breakdown': decision_breakdown,
-            'notification_scenarios': notification_scenarios,
-            'total_days': total_days
+            # 計算這個機會的基本信息
+            duration_hr = (opp['end_time'] - opp['start_time']).total_seconds() / 3600
+            power_watt = opp.get('power_watt', 15)  # 🔧 改為15W，更符合phantom load
+            energy_kwh = power_watt * duration_hr / 1000
+            
+            total_baseline_kwh += energy_kwh
+            
+            # 🔧 修正：根據決策類型正確分類能耗
+            if decision == 'suggest_shutdown':
+                shutdown_saved_kwh += energy_kwh
+            elif decision == 'send_notification':
+                notification_involved_kwh += energy_kwh
+            elif decision == 'keep_on':
+                keep_on_kwh += energy_kwh
+            elif decision == 'delay_decision':
+                delay_kwh += energy_kwh
+            else:
+                keep_on_kwh += energy_kwh
+        
+        # 計算各種場景的節能效果
+        print(f"\n📊 決策分類統計 (修正版):")
+        print(f"   🔴 總基線電量: {total_baseline_kwh:.5f} kWh")
+        print(f"   🟢 直接關機節省: {shutdown_saved_kwh:.5f} kWh")
+        print(f"   🟡 通知涉及電量: {notification_involved_kwh:.5f} kWh")
+        print(f"   ⚪ 繼續使用電量: {keep_on_kwh:.5f} kWh")
+        print(f"   ⚫ 延遲決策電量: {delay_kwh:.5f} kWh")
+        
+        # 不同 notification 響應率的節能計算
+        notification_response_scenarios = {
+            '0% 用戶響應': 0.0,
+            '50% 用戶響應': 0.5,
+            '80% 用戶響應': 0.8,
+            '100% 用戶響應': 1.0
         }
+        
+        print(f"\n🎯 不同場景的節能效果:")
+        print("場景           | 總節省電量(kWh) | 剩餘消耗(kWh) | 節能率 | 節省電費(£)")
+        print("-" * 75)
+        
+        scenario_results = {}
+        
+        for scenario_name, response_rate in notification_response_scenarios.items():
+            # 計算這個場景下的總節省
+            notification_saved = notification_involved_kwh * response_rate
+            total_saved = shutdown_saved_kwh + notification_saved
+            remaining_consumption = total_baseline_kwh - total_saved
+            savings_rate = (total_saved / total_baseline_kwh * 100) if total_baseline_kwh > 0 else 0
+            cost_saved = total_saved * self.uk_electricity_rate
+            
+            scenario_results[scenario_name] = {
+                'total_saved_kwh': total_saved,
+                'remaining_kwh': remaining_consumption,
+                'savings_rate': savings_rate,
+                'cost_saved': cost_saved
+            }
+            
+            print(f"{scenario_name:15s} | {total_saved:15.5f} | {remaining_consumption:13.5f} | "
+                f"{savings_rate:6.1f}% | £{cost_saved:.4f}")
+        
+        # 🎉 最終對比報告
+        best_case = scenario_results['100% 用戶響應']
+        print(f"\n{'='*60}")
+        print(f"🎉 【修正版】原本 vs 智能系統後對比")
+        print(f"{'='*60}")
+        print(f"📊 期間總耗能對比 (最佳情況 - 100%用戶響應)：")
+        print(f"   🔴 原本總耗能：    {total_baseline_kwh:.5f} kWh (£{total_baseline_kwh * self.uk_electricity_rate:.5f})")
+        print(f"   🟢 智能系統後耗能：{best_case['remaining_kwh']:.5f} kWh (£{best_case['remaining_kwh'] * self.uk_electricity_rate:.5f})")
+        print(f"   💚 確定節省：      {best_case['total_saved_kwh']:.5f} kWh (£{best_case['cost_saved']:.5f})")
+        print(f"   📉 節能比例：      {best_case['savings_rate']:.1f}%")
+        
+        # 保守情況
+        conservative_case = scenario_results['50% 用戶響應']
+        print(f"\n📊 期間總耗能對比 (保守情況 - 50%用戶響應)：")
+        print(f"   🔴 原本總耗能：    {total_baseline_kwh:.5f} kWh (£{total_baseline_kwh * self.uk_electricity_rate:.5f})")
+        print(f"   🟢 智能系統後耗能：{conservative_case['remaining_kwh']:.5f} kWh (£{conservative_case['remaining_kwh'] * self.uk_electricity_rate:.5f})")
+        print(f"   💚 確定節省：      {conservative_case['total_saved_kwh']:.5f} kWh (£{conservative_case['cost_saved']:.5f})")
+        print(f"   📉 節能比例：      {conservative_case['savings_rate']:.1f}%")
+        
+        print(f"{'='*60}")
+        
+        return scenario_results
 
     def _create_energy_saving_visualization(self, decision_breakdown, notification_scenarios, 
                                           total_baseline_kwh, fixed_saving_kwh, notification_kwh, total_days):
@@ -1055,6 +1472,49 @@ class DecisionTreeSmartPowerAnalysis:
             print(f"🧠 最終決策：{decision}")
             print()
 
+    def debug_decision_flow(self, sample_opportunity):
+        """調試決策流程"""
+        print("🔍 調試決策流程:")
+        
+        try:
+            features = self._extract_enhanced_features(sample_opportunity, None)
+            timestamp = sample_opportunity['start_time']
+            
+            print(f"1. 提取特徵: {features}")
+            
+            # 測試分數計算
+            activity_score = 0.3
+            habit_score = 0.4
+            confidence_score = 0.2
+            
+            print(f"2. 分數: activity={activity_score}, habit={habit_score}, confidence={confidence_score}")
+            
+            # 測試原始決策
+            decision, debug_info = self._make_intelligent_decision(
+                activity_score, habit_score, confidence_score, features
+            )
+            print(f"3. 原始決策: {decision}")
+            
+            # 測試濾波器
+            filter_result = self.anti_oscillation_filter.filter_decision(
+                original_decision=decision,
+                power_value=features['power_watt'],
+                timestamp=timestamp
+            )
+            print(f"4. 濾波結果: {filter_result}")
+            
+            final_decision = filter_result['filtered_decision']
+            print(f"5. 最終決策: {final_decision}")
+            
+            # 檢查是否在results字典中
+            print(f"6. 是否在results中: {final_decision in self.results}")
+            print(f"7. results字典keys: {list(self.results.keys())}")
+            
+        except Exception as e:
+            print(f"❌ 調試過程中發生錯誤: {e}")
+            import traceback
+            traceback.print_exc()
+
     def run_analysis(self):
         """運行決策樹版完整分析"""
         print("\n" + "="*80)
@@ -1071,6 +1531,10 @@ class DecisionTreeSmartPowerAnalysis:
         # 生成機會點
         opportunities = self._generate_phantom_load_opportunities(df)
         print(f"✅ 建立 {len(opportunities)} 筆機會點")
+
+        if len(opportunities) > 0:
+            print("\n🔍 執行決策流程調試:")
+            self.debug_decision_flow(opportunities[0])
 
         # 應用決策樹決策
         decision_results = self._apply_decision_tree_models(opportunities, df)
@@ -1091,6 +1555,58 @@ class DecisionTreeSmartPowerAnalysis:
 
         # 計算節能效果
         self._estimate_energy_saving(decision_results, df)
+        from collections import Counter
+        decisions = [result['decision'] for result in decision_results]
+        decision_counts = Counter(decisions)
+        total_decisions = len(decisions)
+
+        print(f"\n🔍 決策分布調試:")
+        print(f"   總決策數: {total_decisions}")
+        for decision, count in decision_counts.items():
+            percentage = (count / total_decisions * 100) if total_decisions > 0 else 0
+            print(f"   {decision}: {count} 次 ({percentage:.1f}%)")
+
+        active_decisions = decision_counts.get('suggest_shutdown', 0) + decision_counts.get('send_notification', 0)
+        active_ratio = (active_decisions / total_decisions * 100) if total_decisions > 0 else 0
+        print(f"   📊 主動節能決策比例: {active_ratio:.1f}%")
+
+        if HAS_EVALUATOR and _decision_evaluator is not None:
+            try:
+                print("\n" + "="*80)
+                print("🔍 DecisionEvaluator 最終評估報告")
+                print("="*80)
+                
+                # 匯出評估結果
+                evaluation_file = _decision_evaluator.export_evaluation_results('decision_tree_evaluation_log.csv')
+                if evaluation_file:
+                    print(f"✅ 決策評估結果已匯出: {evaluation_file}")
+                
+                # 獲取評估摘要
+                evaluation_summary = _decision_evaluator.get_evaluation_summary()
+                
+                if 'average_scores' in evaluation_summary:
+                    print(f"\n📊 評估摘要:")
+                    print(f"   評估次數: {evaluation_summary['evaluation_count']}")
+                    
+                    avg_scores = evaluation_summary['average_scores']
+                    # print(f"\n🎯 平均評估分數:")
+                    # print(f"   - 穩定性分數: {avg_scores['stability']:.3f}")
+                    # print(f"   - 一致性分數: {avg_scores['consistency']:.3f}")
+                    # print(f"   - 準確性分數: {avg_scores['accuracy']:.3f}")
+                    # print(f"   - 綜合評估分數: {avg_scores['overall']:.3f}")
+                    
+                    # 根據分數給出建議
+                    overall_score = avg_scores['overall']
+                    # print(f"\n🏆 系統性能評級:")
+                    # if overall_score > 0.8:
+                    #     print("   ✅ 優秀 - 決策系統性能優秀，運行穩定")
+                    # elif overall_score > 0.6:
+                    #     print("   ⚠️ 良好 - 決策系統性能良好，但有改進空間")
+                    # else:
+                    #     print("   ❌ 需要改進 - 決策系統性能較差，需要重新檢查")
+                
+            except Exception as e:
+                print(f"❌ 評估結果處理錯誤: {e}")
 
         # 運行測試
         test_samples = [
@@ -1101,6 +1617,17 @@ class DecisionTreeSmartPowerAnalysis:
             {"avg_power": 100, "start_time": datetime(2024, 11, 26, 18, 30)}, # medium power, evening
         ]
 
+
+        # 🆕 顯示濾波器最終狀態
+        print(f"\n🔧 防震盪濾波器最終狀態:")
+        filter_status = self.anti_oscillation_filter.get_filter_status()
+        print(f"   當前功率狀態: {filter_status['current_power_state']}")
+        print(f"   狀態持續時間: {filter_status['state_duration_minutes']:.1f} 分鐘")
+        print(f"   最後決策: {filter_status['last_decision']}")
+        print(f"   是否在冷卻期: {filter_status['is_in_cooldown']}")
+        print(f"   休眠模式檢測: {'是' if filter_status.get('sleep_mode_detected', False) else '否'}")    # 🆕 添加
+        print(f"   休眠持續時間: {filter_status.get('sleep_duration_minutes', 0):.1f} 分鐘")               # 🆕 添加
+
         self.test(test_samples)
 
 
@@ -1109,9 +1636,22 @@ if __name__ == '__main__':
     print("="*50)
     
     # 創建決策樹版分析實例
-    analysis = DecisionTreeSmartPowerAnalysis()
+    analysis = DecisionTreeSmartPowerAnalysis() 
     
     # 運行分析
     analysis.run_analysis()
     
     print("\n🎉 決策樹版分析完成！")
+
+    if HAS_EVALUATOR and _decision_evaluator is not None:
+        print(f"\n📋 DecisionEvaluator 最終狀態:")
+        print(f"   歷史記錄數量: {len(_decision_evaluator.decision_history)}")
+        print(f"   評估執行次數: {len(_decision_evaluator.evaluation_results)}")
+        
+        if len(_decision_evaluator.evaluation_results) > 0:
+            last_evaluation = _decision_evaluator.evaluation_results[-1]
+            print(f"   最後評估時間: {last_evaluation['timestamp'].strftime('%Y-%m-%d %H:%M:%S')}")
+            print(f"   最後綜合分數: {last_evaluation['overall_score']['overall_score']:.3f}")
+    
+    print("\n🔄 如需重新運行，請重新執行此腳本")
+    print("📊 評估結果已保存，可用於後續分析和改進")

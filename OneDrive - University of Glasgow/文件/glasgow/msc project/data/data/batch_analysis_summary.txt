@@ -1,0 +1,19 @@
+虛耗負載批量分析系統 - 分析摘要
+=====================================
+分析時間: 2025-07-23 16:33:59
+來源檔案: C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/2025-07-23_16_31_influxdb_data.csv
+
+分析統計:
+- 總處理筆數: 185
+- 有效數據筆數: 0
+- 虛耗負載檢測: 0 筆 (0.0%)
+- 正常使用檢測: 0 筆 (100.0%)
+
+系統配置:
+- 虛耗負載閾值: 14.5W
+- 決策系統狀態: 不可用
+
+輸出檔案:
+- CSV 記錄: data/batch_phantom_load_analysis_log.csv
+- 詳細記錄: data/batch_phantom_load_detailed_log.json
+- 摘要記錄: data/batch_analysis_summary.txt

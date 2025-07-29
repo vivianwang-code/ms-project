@@ -24,7 +24,7 @@ INFLUX_CONFIG = {
     'token': "VTPT42ftuyixhrddaurUEnBWeVA3vBiZONqf5eDCADAUc-8LZSEoLKJdt98oshQp6ZM7l0HQFsdrzIOnI6-11A==",
     'org': "myorg",
     'bucket': "iotproject",
-    'measurement': "influxdb-JWN-D6",
+    'measurement': "influxdb-JWN-D8",
     'field': "power"
 }
 

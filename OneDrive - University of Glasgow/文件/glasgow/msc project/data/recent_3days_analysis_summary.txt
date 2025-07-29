@@ -1,0 +1,28 @@
+Recent 3 Days Phantom Load Analysis System - Summary
+=======================================================
+Analysis Time: 2025-07-29 03:26:49
+Source File: C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/complete_power_data_with_history.csv
+Analysis Period: Recent 3 days
+
+Analysis Statistics:
+- Total Processed Records: 90
+- Valid Data Records: 90
+- Phantom Load Detected: 70 records (77.8%)
+- Normal Usage Detected: 20 records (22.2%)
+
+Decision Statistics:
+- Shutdown: 56 records (62.2%)
+- Normal Usage: 20 records (22.2%)
+- Send Notification: 12 records (13.3%)
+- Delay Decision: 2 records (2.2%)
+
+System Configuration:
+- Phantom Load Threshold: 36W
+- Decision System Status: Available
+- Decision Evaluator Status: Available
+
+Output Files:
+- CSV Record: recent_3days_phantom_load_analysis_log.csv
+- Detailed Record: recent_3days_phantom_load_detailed_log.json
+- Summary Record: recent_3days_analysis_summary.txt
+- Evaluation Record: decision_evaluation_log.csv

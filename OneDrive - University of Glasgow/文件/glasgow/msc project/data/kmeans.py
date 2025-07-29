@@ -317,7 +317,7 @@ if __name__ == "__main__":
 
     # file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/6CL-S8 television 15min.csv"
     # file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/6CL-S2_washing_machine_15min.csv"
-    file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/iotproject_D8.csv"
+    file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/20250707_20250728_D8.csv"
 
     df = read_file(file_path)
 
