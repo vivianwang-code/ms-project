@@ -1,23 +1,23 @@
 {
-  "generated_at": "2025-07-29T02:28:22.384761",
+  "generated_at": "2025-07-30T14:25:40.324748",
   "method": "kmeans_3_clusters",
   "thresholds": {
-    "phantom_upper": 19.764392540116745,
-    "light_lower": 19.764392540116745,
-    "light_upper": 84.4748427672956,
-    "regular_lower": 19.764392540116745,
-    "regular_upper": 84.4748427672956,
-    "heavy_lower": 84.4748427672956,
+    "phantom_upper": 20.00500482527998,
+    "light_lower": 20.00500482527998,
+    "light_upper": 84.70588235294117,
+    "regular_lower": 20.00500482527998,
+    "regular_upper": 84.70588235294117,
+    "heavy_lower": 84.70588235294117,
     "cluster_centers": {
-      "phantom_center": 1.5790995456422965,
-      "light_center": 37.9496855345912,
+      "phantom_center": 1.598244944677604,
+      "light_center": 38.411764705882355,
       "regular_center": 131.0
     }
   },
   "classification_rules": {
     "non_use": "power == 0",
-    "phantom_load": "0 < power <= 19.764392540116745",
-    "light_use": "19.764392540116745 < power <= 84.4748427672956",
-    "regular_use": "power > 84.4748427672956"
+    "phantom_load": "0 < power <= 20.00500482527998",
+    "light_use": "20.00500482527998 < power <= 84.70588235294117",
+    "regular_use": "power > 84.70588235294117"
   }
 }

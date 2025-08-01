@@ -53,7 +53,7 @@ def main():
             
             # Update file path to expanded file
             final_data_file = expand_data_file
-        else:
+        else:   
             system_logger.info(f"Sufficient data length: {total_days} days >= 60 days, skipping data expansion")
             final_data_file = output_path
         

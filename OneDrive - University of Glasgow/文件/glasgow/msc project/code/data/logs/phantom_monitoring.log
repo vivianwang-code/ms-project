@@ -1767,3 +1767,88 @@
 [2025-07-29 02:28:25] INFO     phantom: Final decision: Suggest Shutdown
 [2025-07-29 02:28:25] INFO     phantom: Decision filtered: suggest_shutdown -> delay_decision (狀態持續時間不足)
 [2025-07-29 02:28:25] INFO     phantom: Intelligent decision result: Delay Decision
+[2025-07-30 00:45:44] INFO     phantom: Successfully loaded Phantom Load Threshold: 20.049940558367847W
+[2025-07-30 00:45:47] INFO     phantom: 🚀 Phantom Load monitoring system startup
+[2025-07-30 00:45:47] INFO     phantom: Monitoring device: influxdb-JWN-D8
+[2025-07-30 00:45:47] INFO     phantom: Phantom Load threshold: 20.049940558367847W
+[2025-07-30 00:45:47] INFO     phantom: Monitor interval: 900 seconds
+[2025-07-30 00:45:47] INFO     phantom: Initializing logging system...
+[2025-07-30 00:45:47] INFO     phantom: Initializing decision system...
+[2025-07-30 00:45:49] INFO     phantom: Starting monitoring loop...
+[2025-07-30 00:45:49] INFO     phantom: Successfully retrieved data: 5.0W @ 2025-07-29 23:43:48.267000+00:00
+[2025-07-30 00:45:49] WARNING  phantom: 🚨 Phantom Load detected: 5.0W (< 20.049940558367847W)
+[2025-07-30 00:45:49] INFO     phantom: Score calculation completed - Activity: 0.05, Habit: 0.33, Confidence: 0.10
+[2025-07-30 00:45:49] INFO     phantom: Professional model usage rate: 100%
+[2025-07-30 00:45:49] INFO     phantom: Model sources - Activity: Professional Model, Habit: Professional Model, Confidence: Professional Model
+[2025-07-30 00:45:49] INFO     phantom: Final decision: Suggest Shutdown
+[2025-07-30 00:45:49] INFO     phantom: Decision filtered: suggest_shutdown -> delay_decision (狀態持續時間不足)
+[2025-07-30 00:45:49] INFO     phantom: Intelligent decision result: Delay Decision
+[2025-07-30 02:09:39] INFO     phantom: Successfully loaded Phantom Load Threshold: 20.049615999693565W
+[2025-07-30 02:09:42] INFO     phantom: 🚀 Phantom Load monitoring system startup
+[2025-07-30 02:09:42] INFO     phantom: Monitoring device: influxdb-JWN-D8
+[2025-07-30 02:09:42] INFO     phantom: Phantom Load threshold: 20.049615999693565W
+[2025-07-30 02:09:42] INFO     phantom: Monitor interval: 900 seconds
+[2025-07-30 02:09:42] INFO     phantom: Initializing logging system...
+[2025-07-30 02:09:42] WARNING  phantom: Decision system unavailable, providing data monitoring only
+[2025-07-30 02:09:42] INFO     phantom: Starting monitoring loop...
+[2025-07-30 02:09:42] INFO     phantom: Successfully retrieved data: 5.0W @ 2025-07-30 00:58:37.211000+00:00
+[2025-07-30 02:09:42] WARNING  phantom: 🚨 Phantom Load detected: 5.0W (< 20.049615999693565W)
+[2025-07-30 02:09:42] WARNING  phantom: Decision system module not found, using default response
+[2025-07-30 02:09:42] INFO     phantom: Intelligent decision result: No Decision System
+[2025-07-30 02:17:06] INFO     phantom: Successfully loaded Phantom Load Threshold: 20.049184442256024W
+[2025-07-30 02:17:09] INFO     phantom: 🚀 Fuzzy Logic實時監控系統啟動
+[2025-07-30 02:17:09] INFO     phantom: 監控設備: influxdb-JWN-D6
+[2025-07-30 02:17:09] INFO     phantom: Phantom Load閾值: 20.049184442256024W
+[2025-07-30 02:17:09] INFO     phantom: 監控間隔: 900 秒
+[2025-07-30 02:17:09] INFO     phantom: 初始化日誌系統...
+[2025-07-30 02:17:09] INFO     phantom: 初始化Fuzzy Logic智能系統...
+[2025-07-30 02:17:09] INFO     phantom: 初始化Fuzzy Logic智能分析系統...
+[2025-07-30 02:17:10] INFO     phantom: Fuzzy Logic系統初始化完成
+[2025-07-30 02:17:10] INFO     phantom: 開始監控循環...
+[2025-07-30 02:17:10] INFO     phantom: Successfully retrieved data: 1.0W @ 2025-07-30 01:10:54.301000+00:00
+[2025-07-30 02:17:10] WARNING  phantom: 🚨 Phantom Load detected: 1.0W (< 20.049184442256024W)
+[2025-07-30 02:17:10] INFO     phantom: Decision filtered: suggest_shutdown -> delay_decision (狀態持續時間不足)
+[2025-07-30 02:17:10] INFO     phantom: Fuzzy Logic decision completed: Intelligent Delay
+[2025-07-30 02:17:10] INFO     phantom: Intelligent decision result: Intelligent Delay
+[2025-07-30 02:18:44] INFO     phantom: Successfully loaded Phantom Load Threshold: 20.04886166128693W
+[2025-07-30 02:18:47] INFO     phantom: 🚀 Fuzzy Logic實時監控系統啟動
+[2025-07-30 02:18:47] INFO     phantom: 監控設備: influxdb-JWN-D6
+[2025-07-30 02:18:47] INFO     phantom: Phantom Load閾值: 20.04886166128693W
+[2025-07-30 02:18:47] INFO     phantom: 監控間隔: 900 秒
+[2025-07-30 02:18:47] INFO     phantom: 初始化日誌系統...
+[2025-07-30 02:18:47] INFO     phantom: 初始化Fuzzy Logic智能系統...
+[2025-07-30 02:18:47] INFO     phantom: 初始化Fuzzy Logic智能分析系統...
+[2025-07-30 02:18:48] INFO     phantom: Fuzzy Logic系統初始化完成
+[2025-07-30 02:18:48] INFO     phantom: 開始監控循環...
+[2025-07-30 02:18:48] INFO     phantom: Successfully retrieved data: 1.0W @ 2025-07-30 01:10:54.301000+00:00
+[2025-07-30 02:18:48] WARNING  phantom: 🚨 Phantom Load detected: 1.0W (< 20.04886166128693W)
+[2025-07-30 02:18:48] INFO     phantom: Decision filtered: suggest_shutdown -> delay_decision (狀態持續時間不足)
+[2025-07-30 02:18:48] INFO     phantom: Fuzzy Logic decision completed: Intelligent Delay
+[2025-07-30 02:18:48] INFO     phantom: Intelligent decision result: Intelligent Delay
+[2025-07-30 02:44:18] INFO     phantom: Successfully loaded Phantom Load Threshold: 20.04886166128693W
+[2025-07-30 02:44:21] INFO     phantom: 🚀 Phantom Load monitoring system startup
+[2025-07-30 02:44:21] INFO     phantom: Monitoring device: influxdb-JWN-D8
+[2025-07-30 02:44:21] INFO     phantom: Phantom Load threshold: 20.04886166128693W
+[2025-07-30 02:44:21] INFO     phantom: Monitor interval: 900 seconds
+[2025-07-30 02:44:21] INFO     phantom: Initializing logging system...
+[2025-07-30 02:44:21] INFO     phantom: Initializing decision system...
+[2025-07-30 02:44:23] INFO     phantom: Starting monitoring loop...
+[2025-07-30 02:44:23] INFO     phantom: Successfully retrieved data: 4.0W @ 2025-07-30 01:43:37.486000+00:00
+[2025-07-30 02:44:23] WARNING  phantom: 🚨 Phantom Load detected: 4.0W (< 20.04886166128693W)
+[2025-07-30 02:44:23] INFO     phantom: Score calculation completed - Activity: 0.05, Habit: 0.30, Confidence: 0.10
+[2025-07-30 02:44:23] INFO     phantom: Professional model usage rate: 100%
+[2025-07-30 02:44:23] INFO     phantom: Model sources - Activity: Professional Model, Habit: Professional Model, Confidence: Professional Model
+[2025-07-30 02:44:23] INFO     phantom: Final decision: Suggest Shutdown
+[2025-07-30 02:44:23] INFO     phantom: Decision filtered: suggest_shutdown -> delay_decision (狀態持續時間不足)
+[2025-07-30 02:44:23] INFO     phantom: Intelligent decision result: Delay Decision
+[2025-07-30 14:17:52] INFO     phantom: Successfully loaded Phantom Load Threshold: 20.048646894919653W
+[2025-07-30 14:25:35] INFO     phantom: Successfully loaded Phantom Load Threshold: 20.048646894919653W
+[2025-07-30 14:25:42] INFO     phantom: 🚀 Phantom Load monitoring system startup
+[2025-07-30 14:25:42] INFO     phantom: Monitoring device: influxdb-JWN-D8
+[2025-07-30 14:25:42] INFO     phantom: Phantom Load threshold: 20.048646894919653W
+[2025-07-30 14:25:42] INFO     phantom: Monitor interval: 900 seconds
+[2025-07-30 14:25:42] INFO     phantom: Initializing logging system...
+[2025-07-30 14:25:42] INFO     phantom: Initializing decision system...
+[2025-07-30 14:25:46] INFO     phantom: Starting monitoring loop...
+[2025-07-30 14:25:46] INFO     phantom: Successfully retrieved data: 40.0W @ 2025-07-30 13:13:46.389000+00:00
+[2025-07-30 14:25:46] INFO     phantom: Normal usage: 40.0W (>= 20.048646894919653W)

@@ -1,4 +1,0 @@
-monitor_time,data_time,power_w,type,action,decision,activity_score,habit_score,confidence_score,activity_level,habit_level,confidence_level,professional_percentage,data_age_minutes,reason
-2025-07-29 01:46:51,2025-07-29 00:40:47,17.0,phantom_load,Delay Decision,delay_decision,0.05,0.428125,0.12650259731099084,low,medium,low,100.0,6.1,
-2025-07-29 02:26:00,2025-07-29 01:10:49,17.0,phantom_load,Delay Decision,delay_decision,0.05,0.428125,0.1,low,medium,low,100.0,15.2,
-2025-07-29 02:28:25,2025-07-29 01:10:49,17.0,phantom_load,Delay Decision,delay_decision,0.05,0.428125,0.14712403389999962,low,medium,low,100.0,17.6,
