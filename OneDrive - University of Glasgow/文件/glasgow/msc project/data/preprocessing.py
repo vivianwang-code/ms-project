@@ -105,6 +105,13 @@ def kmeans_analysis(df):
     # 繪製圖表
     kmeans_filter.plot_new_classification_results(df_kmeans_result, category_stats)
     kmeans_filter.plot_step_by_step_process(df, df_kmeans_result, threshold=1.5)
+    kmeans_filter.plot_power_classification_scatter(df_kmeans_result, 
+                                 threshold_1=36,    # 第一個閾值  
+                                 threshold_2=81,   # phantom load | light use
+                                 threshold_3=None)   # light use | regular use
+    
+    # kmeans_filter.plot_energy_consumption_pie(df_kmeans_result)
+    kmeans_filter.plot_energy_consumption_pie(df_kmeans_result, time_interval_minutes=15)
 
     return df
 
@@ -284,7 +291,10 @@ def save_data_csv(df, output_path='data_after_preprocessing.csv'):
 if __name__ == "__main__":
     # 測試文件路徑
     file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/20250707_20250728_D8.csv"
-    
+    # file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/20250707_20250728_D6.csv"
+
+    # file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/20250707_20250731_D3.csv"
+
     print('====================== data preprocessing ======================')
 
     df = load_data(file_path)

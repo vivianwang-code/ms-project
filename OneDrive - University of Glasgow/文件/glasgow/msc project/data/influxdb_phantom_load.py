@@ -157,34 +157,34 @@ def log_result_to_json(result, monitor_time, monitor_count):
     with open(LOG_CONFIG['json_file'], 'w', encoding='utf-8') as jsonfile:
         json.dump(log_data, jsonfile, indent=2, ensure_ascii=False)
 
-def update_summary_file(monitor_count, phantom_count, normal_count):
-    """Update summary file"""
-    total_valid = phantom_count + normal_count
-    phantom_rate = (phantom_count / total_valid * 100) if total_valid > 0 else 0
+# def update_summary_file(monitor_count, phantom_count, normal_count):
+#     """Update summary file"""
+#     total_valid = phantom_count + normal_count
+#     phantom_rate = (phantom_count / total_valid * 100) if total_valid > 0 else 0
     
-    summary_content = f"""Phantom Load Monitoring System - Runtime Summary
-=====================================
-Last updated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+#     summary_content = f"""Phantom Load Monitoring System - Runtime Summary
+# =====================================
+# Last updated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 
-Monitoring Statistics:
-- Total monitoring cycles: {monitor_count}
-- Valid data cycles: {total_valid}
-- Phantom load detections: {phantom_count} times ({phantom_rate:.1f}%)
-- Normal usage detections: {normal_count} times ({100-phantom_rate:.1f}%)
+# Monitoring Statistics:
+# - Total monitoring cycles: {monitor_count}
+# - Valid data cycles: {total_valid}
+# - Phantom load detections: {phantom_count} times ({phantom_rate:.1f}%)
+# - Normal usage detections: {normal_count} times ({100-phantom_rate:.1f}%)
 
-System Configuration:
-- Phantom load threshold: {PHANTOM_LOAD_THRESHOLD}W
-- Monitor interval: {MONITOR_INTERVAL} seconds
-- Decision system status: {'Available' if HAS_DECISION_SYSTEM else 'Unavailable'}
+# System Configuration:
+# - Phantom load threshold: {PHANTOM_LOAD_THRESHOLD}W
+# - Monitor interval: {MONITOR_INTERVAL} seconds
+# - Decision system status: {'Available' if HAS_DECISION_SYSTEM else 'Unavailable'}
 
-Log Files:
-- CSV records: {LOG_CONFIG['csv_file']}
-- Detailed records: {LOG_CONFIG['json_file']}
-- Summary records: {LOG_CONFIG['summary_file']}
-"""
+# Log Files:
+# - CSV records: {LOG_CONFIG['csv_file']}
+# - Detailed records: {LOG_CONFIG['json_file']}
+# - Summary records: {LOG_CONFIG['summary_file']}
+# """
     
-    with open(LOG_CONFIG['summary_file'], 'w', encoding='utf-8') as f:
-        f.write(summary_content)
+#     with open(LOG_CONFIG['summary_file'], 'w', encoding='utf-8') as f:
+#         f.write(summary_content)
 
 def init_decision_system():
     """Initialize decision system"""
@@ -514,7 +514,7 @@ def main():
                     normal_count += 1
             
             # Update summary file
-            update_summary_file(monitoring_count, phantom_count, normal_count)
+            # update_summary_file(monitoring_count, phantom_count, normal_count)
             
             # Show statistics every 5 monitoring cycles
             if monitoring_count % 5 == 0:
@@ -536,7 +536,7 @@ def main():
         print(f"⚪ Normal usage detections: {normal_count} times")
         
         # Final summary update
-        update_summary_file(monitoring_count, phantom_count, normal_count)
+        # update_summary_file(monitoring_count, phantom_count, normal_count)
         
         print(f"\n📁 Monitoring records saved to:")
         print(f"    📊 CSV data: {LOG_CONFIG['csv_file']}")

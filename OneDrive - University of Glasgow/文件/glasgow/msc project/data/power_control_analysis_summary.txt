@@ -1,0 +1,18 @@
+使用您現有 Fuzzy Logic 系統的功率控制分析報告
+============================================================
+
+分析時間: 2025-07-31 15:14:46
+數據來源: C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/complete_power_data_with_history.csv
+
+基本統計:
+  處理機會點數量: 370
+  平均原始功率: 19.59 W
+  平均控制後功率: 3.85 W
+  平均功率減少: 15.74 W
+  總節能量: 5.822 kWh
+
+決策分布:
+  send_notification: 213 次 (57.6%)
+  delay_decision: 77 次 (20.8%)
+  suggest_shutdown: 62 次 (16.8%)
+  keep_on: 18 次 (4.9%)

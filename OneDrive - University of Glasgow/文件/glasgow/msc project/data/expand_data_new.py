@@ -86,9 +86,9 @@ class PowerDataExpander():
         根據 power 值生成缺失的分類欄位
         """
         # 使用簡單的閾值分類（您可以根據需要調整）
-        data['is_phantom_load'] = data['power'] <= 35
-        data['is_light_use'] = (data['power'] > 35) & (data['power'] <= 75)
-        data['is_regular_use'] = data['power'] > 75
+        data['is_phantom_load'] = data['power'] <= 19
+        data['is_light_use'] = (data['power'] > 19) & (data['power'] <= 45)
+        data['is_regular_use'] = data['power'] > 45
         
         # 生成 power_state 欄位
         conditions = [
@@ -338,9 +338,9 @@ class PowerDataExpander():
             else:
                 # 根據功率值推斷
                 avg_power = first_records['power'].mean()
-                if avg_power <= 35:
+                if avg_power <= 36:
                     return 'phantom load'
-                elif avg_power <= 75:
+                elif avg_power <= 81:
                     return 'light use'
                 else:
                     return 'regular use'
@@ -393,16 +393,17 @@ class PowerDataExpander():
         rand = np.random.random()
         if rand < state_probs['phantom']:
             power_state = 'phantom load'
-            power = np.random.normal(18, 2)
-            power = np.clip(power, 16, 35)
+            power = np.random.normal(20, 5)
+            power = np.clip(power, 16, 36)
+
         elif rand < state_probs['phantom'] + state_probs['light']:
             power_state = 'light use'
-            power = np.random.normal(55, 10)
-            power = np.clip(power, 37, 75)
+            power = np.random.normal(60, 8)
+            power = np.clip(power, 37, 81)
         else:
             power_state = 'regular use'
-            power = np.random.normal(90, 20)
-            power = np.clip(power, 80, 173)
+            power = np.random.normal(180, 15)
+            power = np.clip(power, 82, 222)
         
         # 應用週末因子和添加變異
         power *= weekend_factor

@@ -230,6 +230,222 @@ def evalute_kmeans_silhouette(power_kmeans_data, kmeans):
     silhouette_avg = silhouette_score(power_kmeans_data, kmeans.labels_)
     print(f"silhouette score: {silhouette_avg:.3f}")
 
+def plot_power_classification_scatter(df, threshold_1=36, threshold_2=81, threshold_3=None):
+    """
+    繪製功率分類散點圖，顯示不同功率類別和閾值線
+    
+    Parameters:
+    df: DataFrame with 'power' and 'power_category' columns
+    threshold_1: 第一個閾值（phantom load | light use）
+    threshold_2: 第二個閾值（light use | regular use）
+    threshold_3: 第三個閾值（如果需要）
+    """
+    
+    # 確保有分類結果
+    if 'power_category' not in df.columns:
+        print("正在進行功率分類...")
+        df = kmeans_power(df)
+    
+    # 設定顏色映射 - 匹配您的分類名稱
+    color_map = {
+        'non use': 'red',
+        'phantom': 'green',  # phantom load 使用綠色方塊
+        'light': 'blue',      # light use 使用藍色三角形
+        'regular': 'orange'   # regular use 使用橙色菱形
+    }
+    
+    # 設定標記樣式
+    marker_map = {
+        'non use': 'o',           # 圓形
+        'phantom': 's',      # 方塊
+        'light': '^',         # 三角形
+        'regular': 'D'        # 菱形
+    }
+    
+    # 創建圖表
+    plt.figure(figsize=(16, 8))
+    
+    # 繪製數據點
+    x_values = range(len(df))
+
+     # 標籤映射 - 將分類名稱映射到顯示標籤
+    label_display_map = {
+        'non use': 'non use',
+        'phantom': 'phantom load',
+        'light': 'light use', 
+        'regular': 'regular use'
+    }
+    
+    for category in df['power_category'].unique():
+        if pd.notna(category):
+            mask = df['power_category'] == category
+            x_cat = np.array(x_values)[mask]
+            y_cat = df[mask]['power']
+            display_label = label_display_map.get(category, category)
+            
+            plt.scatter(x_cat, y_cat, 
+                       c=color_map.get(category, 'gray'),
+                       marker=marker_map.get(category, 'o'),
+                       alpha=0.7, 
+                       label=display_label, 
+                       s=90)
+    
+    # 繪製閾值線
+    plt.axhline(y=0, color='red', linestyle='-', alpha=0.7, linewidth=3)
+    plt.text(10, 5, 'Zero Power Line', fontsize=20, 
+             bbox=dict(boxstyle="round,pad=0.3", facecolor="white", alpha=0.8))
+    
+    plt.axhline(y=threshold_1, color='black', linestyle='--', alpha=0.7, linewidth=3)
+    plt.text(10, threshold_1 + 2, 
+             f'Phantom load threshold: {threshold_1:.1f}W', 
+             fontsize=20,
+             bbox=dict(boxstyle="round,pad=0.3", facecolor="white", alpha=0.8))
+    
+    plt.axhline(y=threshold_2, color='black', linestyle='--', alpha=0.7, linewidth=3)
+    plt.text(10, threshold_2 + 2, 
+             f'Light use threshold: {threshold_2:.1f}W', 
+             fontsize=20,
+             bbox=dict(boxstyle="round,pad=0.3", facecolor="white", alpha=0.8))
+    
+    # 設定圖表屬性
+    plt.xlabel('Data Point Index', fontsize=20)
+    plt.ylabel('Power (W)', fontsize=20)
+    # plt.title('Power Classification Scatter Plot with Thresholds', fontsize=14, fontweight='bold')
+    
+    # 設定圖例
+    plt.legend(loc='upper right', fontsize=20)
+    
+    # 設定軸刻度標籤字體大小
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
+    
+    # 設定網格
+    plt.grid(True, alpha=0.7)
+    
+    # 設定Y軸範圍
+    y_max = df['power'].max()
+    plt.ylim(-5, y_max * 1.1)
+    
+    # 調整佈局
+    plt.tight_layout()
+    
+    # 顯示圖表
+    plt.show()
+
+def plot_energy_consumption_pie(df, time_interval_minutes=15):
+    """
+    繪製各power state的總耗能量比例圓餅圖
+    
+    Parameters:
+    df: DataFrame with 'power' and 'power_category' columns
+    time_interval_minutes: 數據採樣間隔（分鐘），預設15分鐘
+    """
+    
+    # 檢查必要的欄位
+    if 'power_category' not in df.columns:
+        print("錯誤：DataFrame中缺少 'power_category' 欄位")
+        return
+    
+    if 'power' not in df.columns:
+        print("錯誤：DataFrame中缺少 'power' 欄位")
+        return
+    
+    # 計算時間間隔（小時）
+    time_interval_hours = time_interval_minutes / 60
+    
+    # 計算每個類別的總耗能量（kWh）
+    energy_by_category = {}
+    
+    for category in df['power_category'].unique():
+        if pd.notna(category):
+            category_data = df[df['power_category'] == category]
+            # 總功率 × 時間間隔 ÷ 1000 (W轉kW)
+            total_energy = (category_data['power'].sum() * time_interval_hours) / 1000
+            energy_by_category[category] = total_energy
+    
+    # 過濾掉能耗為0的類別（如non use）
+    filtered_energy = {k: v for k, v in energy_by_category.items() if v > 0}
+    
+    if not filtered_energy:
+        print("警告：沒有發現有效的能耗數據")
+        return
+    
+    # 設定更美觀的顏色映射
+    color_map = {
+        'phantom': '#2E8B57',      # 海綠色
+        'phantom load': '#2E8B57',
+        'light': '#4169E1',        # 皇家藍
+        'light use': '#4169E1',
+        'regular': '#FF8C00',      # 暗橙色
+        'regular use': '#FF8C00',
+        'non use': '#DC143C',      # 深紅色
+        'no-use': '#DC143C'
+    }
+    
+    # 標籤映射
+    label_display_map = {
+        'phantom': 'Phantom Load',
+        'phantom load': 'Phantom Load',
+        'light': 'Light Use',
+        'light use': 'Light Use', 
+        'regular': 'Regular Use',
+        'regular use': 'Regular Use'
+    }
+    
+    # 準備繪圖數據
+    categories = list(filtered_energy.keys())
+    energies = list(filtered_energy.values())
+    colors = [color_map.get(cat, 'gray') for cat in categories]
+    labels = [label_display_map.get(cat, cat) for cat in categories]
+    
+    # 創建更大的圖表
+    plt.figure(figsize=(14, 10))
+    
+    # 計算百分比
+    total_energy = sum(energies)
+    percentages = [(energy / total_energy) * 100 for energy in energies]
+    
+    # 創建圓餅圖 - 只顯示百分比，不顯示標籤
+    wedges, texts, autotexts = plt.pie(energies, 
+                                      colors=colors,
+                                      autopct='%1.1f%%',
+                                      startangle=90,
+                                      textprops={'fontsize': 18, 'fontweight': 'bold'},
+                                      pctdistance=0.85)
+    
+    # 設定標題
+    plt.title('Energy Consumption Distribution by Power State', 
+              fontsize=24, fontweight='bold', pad=30)
+    
+    # 創建自定義圖例
+    legend_labels = []
+    for label, energy, percentage in zip(labels, energies, percentages):
+        legend_labels.append(f'{label}: {energy:.2f} kWh ({percentage:.1f}%)')
+    
+    # 放置圖例在下方
+    plt.legend(wedges, legend_labels, 
+              loc='upper center', 
+              bbox_to_anchor=(0.5, -0.05),
+              ncol=1,
+              fontsize=16,
+              frameon=True,
+              fancybox=True,
+              shadow=True)
+    
+    # 在圖表中央添加總能耗信息
+    plt.text(0, 0, f'Total\n{total_energy:.2f} kWh', 
+             horizontalalignment='center',
+             verticalalignment='center',
+             fontsize=16,
+             fontweight='bold',
+             bbox=dict(boxstyle="round,pad=0.3", facecolor="white", alpha=0.8))
+    
+    # 調整佈局
+    plt.tight_layout()
+    plt.show()
+    
+    
+
 def plot_new_classification_results(df, category_stats):
     """
     Plot charts for new classification results
@@ -431,6 +647,8 @@ def plot_power_classification(df):
 if __name__ == "__main__":
     # Test file path (modify as needed)
     file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/20250707_20250728_D8.csv"
+    # file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/20250707_20250728_D6.csv"
+    # file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/20250707_20250731_D3.csv"
     
     # Read data
     df = read_file(file_path)
@@ -443,6 +661,10 @@ if __name__ == "__main__":
     
     # Plot processing workflow visualization
     plot_step_by_step_process(df, final_result, threshold=1.5)
+    plot_power_classification_scatter(final_result, 
+                                 threshold_1=36,    # 第一個閾值  
+                                 threshold_2=81,   # phantom load | light use
+                                 threshold_3=77.8)   # light use | regular use
     
     print("\n=== Classification Complete ===")
     print(f"Final results contain {len(final_result)} data points")
