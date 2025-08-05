@@ -302,7 +302,7 @@ def filter_recent_3_days(df, time_column='time'):
     """Filter data to keep only recent 3 days"""
     df[time_column] = pd.to_datetime(df[time_column])
     latest_date = df[time_column].max()
-    three_days_ago = latest_date - timedelta(days=3)
+    three_days_ago = latest_date - timedelta(days=1)
     recent_df = df[df[time_column] >= three_days_ago].copy()
     
     return recent_df, latest_date, three_days_ago
@@ -631,22 +631,32 @@ def plot_power_analysis_results(df_all, results_df):
     
     # 修改這裡：加上 marker 參數來顯示數據點
     plt.plot(results_df['data_time'], results_df['power'], 
-             linewidth=2, color='#2E86AB', alpha=0.8, 
-             marker='o', markersize=4, markerfacecolor='#2E86AB', 
-             markeredgecolor='white', markeredgewidth=1,
+             linewidth=2, color="#000000", alpha=0.8, 
+             marker='o', markersize=4, markerfacecolor="#FFFFFF", 
+             markeredgecolor='black', markeredgewidth=2,
              label='Power Consumption')
+    
+    # plt.plot(results_df['data_time'], results_df['power'], 
+    #          linewidth=2, color="#000000", alpha=0.8, 
+    #          marker='o', markersize=3, markerfacecolor="#737171", 
+    #          label='Power Consumption')
+    
+    # plt.plot(results_df['data_time'], results_df['power'], 
+    #          linewidth=2, color="#000000", alpha=0.8, 
+    #          label='Power Consumption')
     
     plt.axhline(y=PHANTOM_LOAD_THRESHOLD, color='red', linestyle='--', 
                 linewidth=2, alpha=0.7, label=f'Phantom Load Threshold ({PHANTOM_LOAD_THRESHOLD}W)')
     
-    plt.xlabel('Time', fontsize=12, fontweight='bold')
-    plt.ylabel('Power (W)', fontsize=12, fontweight='bold')
-    plt.title('Power Consumption Analysis - Recent 3 Days\nwith Decision-based Background Colors', 
-              fontsize=14, fontweight='bold', pad=20)
+    plt.xlabel('Time', fontsize=24, fontweight='bold')
+    plt.ylabel('Power (W)', fontsize=24, fontweight='bold')
+    plt.tick_params(axis='both', which='major', labelsize=22)
+    # plt.title('Power Consumption Analysis - Recent 1 Day\nwith Decision-based Background Colors', 
+    #           fontsize=14, fontweight='bold', pad=20)
     
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d %H:%M'))
     ax.xaxis.set_major_locator(mdates.HourLocator(interval=6))
-    plt.xticks(rotation=45)
+    plt.xticks(rotation=0)
     
     # Add legend
     legend_elements = []
@@ -658,16 +668,17 @@ def plot_power_analysis_results(df_all, results_df):
             label = decision_labels.get(decision, decision.replace('_', ' ').title())
             legend_elements.append(plt.Rectangle((0,0),1,1, facecolor=color, alpha=0.6, label=label))
     
-    legend_elements.append(plt.Line2D([0], [0], color='#2E86AB', linewidth=2, 
+    legend_elements.append(plt.Line2D([0], [0], color="#000000", linewidth=2, 
                                     marker='o', markersize=4, label='Power Consumption'))
     legend_elements.append(plt.Line2D([0], [0], color='red', linestyle='--', linewidth=2, label='Phantom Load Threshold'))
     
-    plt.legend(handles=legend_elements, loc='upper right', bbox_to_anchor=(1.15, 1))
+    plt.legend(handles=legend_elements, loc='upper center', bbox_to_anchor=(0.5, -0.15), 
+           fontsize=24, ncol=3, frameon=False)
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
     
-    plot_filename = f'power_analysis_recent_3days_{datetime.now().strftime("%Y%m%d_%H%M%S")}.png'
-    plt.savefig(plot_filename, dpi=300, bbox_inches='tight')
+    # plot_filename = f'power_analysis_recent_1day_{datetime.now().strftime("%Y%m%d_%H%M%S")}.png'
+    # plt.savefig(plot_filename, dpi=300, bbox_inches='tight')
     
     plt.show()
     

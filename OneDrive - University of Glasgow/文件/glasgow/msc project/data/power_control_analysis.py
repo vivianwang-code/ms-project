@@ -79,6 +79,8 @@ class CompletePowerAnalyzer:
         self.controlled_powers = []
         
         print("✅ CompletePowerAnalyzer initialization completed")
+
+    
     
     def _generate_all_power_opportunities(self, df):
         """Generate opportunities for ALL power levels (not just phantom load)"""
@@ -222,31 +224,39 @@ class CompletePowerAnalyzer:
             power_reduction = original_power
             
         elif decision == 'send_notification':
-            # Assume user agrees to shutdown for low power
-            # Or reduce significantly for medium power
-            if original_power < 60:
-                controlled_power = 0  # Shutdown low power devices
-            else:
-                controlled_power = original_power * 0.3  # Reduce medium power devices
+
+            controlled_power = 0
+            # if original_power < 60:
+            #     controlled_power = 0  # Shutdown low power devices
+            # else:
+            #     controlled_power = original_power * 0.3  # Reduce medium power devices
             power_reduction = original_power - controlled_power
             
         elif decision == 'delay_decision':
-            # Moderate reduction based on scores
-            activity_score = decision_result.get('activity_score', 0.5)
-            habit_score = decision_result.get('habit_score', 0.5)
-            confidence_score = decision_result.get('confidence_score', 0.5)
+
+            controlled_power = original_power
+            power_reduction = 0
+
+            # # Moderate reduction based on scores
+            # activity_score = decision_result.get('activity_score', 0.5)
+            # habit_score = decision_result.get('habit_score', 0.5)
+            # confidence_score = decision_result.get('confidence_score', 0.5)
             
-            # Calculate control factor
-            control_factor = 0.3 * (1 - activity_score) + 0.3 * (1 - habit_score) + 0.4 * confidence_score
-            control_factor = max(0.2, min(0.8, control_factor))
+            # # Calculate control factor
+            # control_factor = 0.3 * (1 - activity_score) + 0.3 * (1 - habit_score) + 0.4 * confidence_score
+            # control_factor = max(0.2, min(0.8, control_factor))
             
-            controlled_power = original_power * control_factor
-            power_reduction = original_power - controlled_power
+            # controlled_power = original_power * control_factor
+            # power_reduction = original_power - controlled_power
             
         elif decision == 'keep_on':
             # Slight optimization only
-            controlled_power = original_power * 0.95
-            power_reduction = original_power - controlled_power
+
+            controlled_power = original_power
+            power_reduction = 0
+
+            # controlled_power = original_power * 0.95
+            # power_reduction = original_power - controlled_power
             
         else:
             # Unknown decision, maintain original power
@@ -271,14 +281,20 @@ class CompletePowerAnalyzer:
         # 🔧 修正：獲取最新日期（確保是 datetime 格式）
         latest_date = df['timestamp'].max()
         print(f"📅 Latest date in data: {latest_date}")
+
+        start_date = pd.to_datetime('2025-07-14').tz_localize('UTC')
+        end_date = pd.to_datetime('2025-07-20').tz_localize('UTC')
         
-        # 設定時間範圍
-        start_date = latest_date - pd.Timedelta(days=25)  # 最近25天
+        # # 設定時間範圍
+        # start_date = latest_date - pd.Timedelta(days=7)  # 最近25天
+        # end_date = latest_date
+
+        df_filtered = df[(df['timestamp'] >= start_date) & (df['timestamp'] <= end_date)].copy()
         
         # 過濾數據
-        df_filtered = df[df['timestamp'] >= start_date].copy()
+        # df_filtered = df[df['timestamp'] >= start_date].copy()
         
-        print(f"📅 Analysis period: {start_date.date()} to {latest_date.date()}")
+        print(f"📅 Analysis period: {start_date.date()} to {end_date.date()}")
         print(f"📊 Original data points: {len(df)}")
         print(f"📊 Filtered data points: {len(df_filtered)} (last 25 days)")
         
@@ -343,14 +359,136 @@ class CompletePowerAnalyzer:
     
     def _categorize_power(self, power):
         """Categorize power levels"""
-        if power < 20:
+        if power < 37:
             return 'Very Low (Phantom)'
-        elif power < 60:
+        elif power < 82:
             return 'Low (Standby)'
-        elif power < 100:
+        elif power < 223:
             return 'Medium (Active)'
         else:
             return 'High (Peak)'
+        
+    def analyze_power_categories(self, df):
+        """分析不同功率類別的消耗和占比 - 純print版本"""
+        print(f"\n{'='*70}")
+        print("📊 Power Category Analysis - Phantom Load, Light Use, Regular Use")
+        print(f"{'='*70}")
+        
+        df['timestamp'] = pd.to_datetime(df['timestamp'])
+        df = df.sort_values('timestamp').reset_index(drop=True)
+        
+        # 計算時間間隔（假設是15分鐘）
+        time_interval_hours = 15 / 60  # 15分鐘 = 0.25小時
+        
+        # 功率分類定義（根據您的前兩個代碼的分類邏輯）
+        def categorize_power(power):
+            if power == 0:
+                return 'no-use'
+            elif power <= 1.5:  # 根據您的threshold
+                return 'phantom'
+            elif power <= 36:   # 根據您的閾值設定
+                return 'phantom'
+            elif power <= 81:   # phantom load | light use 閾值
+                return 'light'
+            else:
+                return 'regular'
+        
+        # 應用分類
+        df['power_category'] = df['power'].apply(categorize_power)
+        
+        # 計算各類別統計
+        category_stats = {}
+        total_energy = 0
+        
+        print(f"🔍 Analysis Settings:")
+        print(f"   Time interval: {time_interval_hours*60:.0f} minutes per data point")
+        print(f"   Total data points: {len(df):,}")
+        print(f"   Analysis period: {df['timestamp'].min().date()} to {df['timestamp'].max().date()}")
+        print(f"   Power classification thresholds:")
+        print(f"     - No use: 0W")
+        print(f"     - Phantom load: 0.1W - 36W") 
+        print(f"     - Light use: 36.1W - 81W")
+        print(f"     - Regular use: >81W")
+        
+        for category in ['no-use', 'phantom', 'light', 'regular']:
+            category_data = df[df['power_category'] == category]
+            
+            if len(category_data) > 0:
+                # 基本統計
+                count = len(category_data)
+                percentage = count / len(df) * 100
+                
+                # 功率統計
+                min_power = category_data['power'].min()
+                max_power = category_data['power'].max()
+                mean_power = category_data['power'].mean()
+                total_power = category_data['power'].sum()
+                
+                # 能耗計算 (kWh)
+                energy_kwh = total_power * time_interval_hours / 1000
+                total_energy += energy_kwh
+                
+                category_stats[category] = {
+                    'count': count,
+                    'percentage': percentage,
+                    'min_power': min_power,
+                    'max_power': max_power,
+                    'mean_power': mean_power,
+                    'total_power': total_power,
+                    'energy_kwh': energy_kwh
+                }
+            else:
+                category_stats[category] = {
+                    'count': 0, 'percentage': 0, 'min_power': 0,
+                    'max_power': 0, 'mean_power': 0, 'total_power': 0,
+                    'energy_kwh': 0
+                }
+        
+        # 計算能耗占比
+        for category in category_stats:
+            if total_energy > 0:
+                category_stats[category]['energy_percentage'] = (
+                    category_stats[category]['energy_kwh'] / total_energy * 100
+                )
+            else:
+                category_stats[category]['energy_percentage'] = 0
+        
+        # 顯示詳細結果
+        print(f"\n📋 Power Category Breakdown:")
+        print(f"{'='*70}")
+        
+        # 中文標籤映射
+        category_labels = {
+            'no-use': 'No Use (關閉)',
+            'phantom': 'Phantom Load (待機)',
+            'light': 'Light Use (輕度使用)',
+            'regular': 'Regular Use (正常使用)'
+        }
+        
+        for category in ['no-use', 'phantom', 'light', 'regular']:
+            stats = category_stats[category]
+            label = category_labels.get(category, category)
+            
+            if stats['count'] > 0:
+                print(f"\n🔸 {label}:")
+                print(f"   📊 Data points: {stats['count']:,} ({stats['percentage']:.1f}%)")
+                print(f"   ⚡ Power range: {stats['min_power']:.1f}W - {stats['max_power']:.1f}W")
+                print(f"   📈 Average power: {stats['mean_power']:.1f}W")
+                print(f"   🔋 Total consumption: {stats['energy_kwh']:.3f} kWh ({stats['energy_percentage']:.1f}%)")
+                print(f"   💰 Cost: £{stats['energy_kwh'] * uk_electricity_rate:.3f}")
+            else:
+                print(f"\n🔸 {label}: No data found")
+        
+        # 總計
+        print(f"\n📊 TOTAL SUMMARY:")
+        print(f"{'='*40}")
+        print(f"   🔋 Total energy consumption: {total_energy:.3f} kWh")
+        print(f"   💰 Total cost: £{total_energy * uk_electricity_rate:.3f}")
+        print(f"   📊 Total data points: {len(df):,}")
+        print(f"   ⏱️  Analysis duration: {len(df) * time_interval_hours:.1f} hours")
+        print(f"   📅 Days analyzed: {len(df) * time_interval_hours / 24:.1f} days")
+        
+        return category_stats, total_energy
     
     def perform_paired_t_test(self):
         """Perform paired t-test analysis for all power levels"""
@@ -479,13 +617,14 @@ class CompletePowerAnalyzer:
         
         # Chart 1: Time series comparison (ALL power levels)
         plt.figure(figsize=(15, 8))
-        plt.plot(timestamps, original_powers, 'b-', linewidth=2, label='Before Control', alpha=0.7)
-        plt.plot(timestamps, controlled_powers, 'r-', linewidth=2, label='After Control', alpha=0.7)
+        plt.plot(timestamps, original_powers, 'b-', linewidth=2, label='Before Control', alpha=1.0)
+        plt.plot(timestamps, controlled_powers, 'r-', linewidth=1, label='After Control', alpha=1.0)
         plt.fill_between(timestamps, original_powers, controlled_powers, alpha=0.3, color='green', label='Energy Saved')
-        plt.xlabel('Time', fontsize=12)
-        plt.ylabel('Power (W)', fontsize=12)
+        plt.xlabel('Time', fontsize=16)
+        plt.ylabel('Power (W)', fontsize=16)
         plt.title('Complete Power Control: Before vs After (ALL Levels)', fontsize=14, fontweight='bold')
-        plt.legend(fontsize=12)
+        plt.legend(fontsize=16)
+        plt.tick_params(axis='both', which='major', labelsize=14)
         plt.grid(True, alpha=0.3)
         plt.tight_layout()
         plt.show()
@@ -632,7 +771,7 @@ class CompletePowerAnalyzer:
     def create_phantom_load_visualization(self):
         """Create separate visualizations for PHANTOM LOAD ONLY - each chart displayed individually"""
         # Filter only phantom load data
-        phantom_results = [r for r in self.analysis_results if r['original_power'] < 60]  # Adjust threshold as needed
+        phantom_results = [r for r in self.analysis_results if r['original_power'] < 37]  # Adjust threshold as needed
         
         if len(phantom_results) == 0:
             print("❌ No phantom load data for visualization")
@@ -796,9 +935,25 @@ class CompletePowerAnalyzer:
             df = pd.read_csv(self.data_file)
             print(f"✅ Loaded {len(df)} data points")
             print(f"📊 Power range: {df['power'].min():.1f}W - {df['power'].max():.1f}W")
+
+            # 🆕 添加這些代碼
+            print("\n🕒 Filtering data for 0714-0720 range...")
+            df['timestamp'] = pd.to_datetime(df['timestamp'])
+            
+            start_date = pd.to_datetime('2025-07-14').tz_localize('UTC')
+            end_date = pd.to_datetime('2025-07-20').tz_localize('UTC')
+            
+            if df['timestamp'].dt.tz is None:
+                df['timestamp'] = df['timestamp'].dt.tz_localize('UTC')
+            
+            df_filtered = df[(df['timestamp'] >= start_date) & (df['timestamp'] <= end_date)].copy()
+            
+            print(f"📅 Using 0714-0720 data: {len(df_filtered)} points")
+
+            category_stats, total_energy = self.analyze_power_categories(df_filtered)
             
             # 2. Process all power data
-            self.process_all_power_data(df)
+            self.process_all_power_data(df_filtered)
             
             # 3. Statistical analysis
             t_test_results = self.perform_paired_t_test()
@@ -811,51 +966,61 @@ class CompletePowerAnalyzer:
             self.create_phantom_load_visualization()
             
             # 5. Final summary
-            self._print_final_summary(t_test_results)
+            self._print_final_summary(t_test_results, category_stats, total_energy) 
             
         except Exception as e:
             print(f"❌ Error during analysis: {e}")
             import traceback
             traceback.print_exc()
     
-    def _print_final_summary(self, t_test_results):
-        """Print final summary for complete power analysis"""
+    def _print_final_summary(self, t_test_results, category_stats=None, total_energy=None):
         print(f"\n{'='*80}")
         print("🎉 Complete Power Analysis - Final Summary")
         print(f"{'='*80}")
         
+        # 🆕 首先顯示原始數據分類統計
+        if category_stats and total_energy:
+            print(f"\n📋 Original Data Summary by Category:")
+            print(f"{'-'*50}")
+            
+            category_labels = {
+                'no-use': 'No Use (關閉)',
+                'phantom': 'Phantom Load (待機)', 
+                'light': 'Light Use (輕度使用)',
+                'regular': 'Regular Use (正常使用)'
+            }
+            
+            for category in ['no-use', 'phantom', 'light', 'regular']:
+                if category in category_stats and category_stats[category]['count'] > 0:
+                    stats = category_stats[category]
+                    label = category_labels[category]
+                    print(f"   🔸 {label}:")
+                    print(f"      Points: {stats['count']:,} ({stats['percentage']:.1f}%)")
+                    print(f"      Energy: {stats['energy_kwh']:.3f} kWh ({stats['energy_percentage']:.1f}%)")
+                    print(f"      Cost: £{stats['energy_kwh'] * uk_electricity_rate:.3f}")
+            
+            print(f"\n   🔋 Original Total: {total_energy:.3f} kWh")
+            print(f"   💰 Original Cost: £{total_energy * uk_electricity_rate:.3f}")
+        
+        # 原有的控制系統分析結果
         if t_test_results:
             total_savings = np.sum([r['power_reduction'] for r in self.analysis_results]) / 1000
             
-            # Power category breakdown
-            df_results = pd.DataFrame(self.analysis_results)
-            category_summary = df_results.groupby('power_category').agg({
-                'original_power': ['count', 'mean'],
-                'power_reduction': 'sum'
-            }).round(2)
-            
-            print(f"📊 Complete Power System Analysis Results:")
-            print(f"   ✅ Successfully analyzed {len(self.analysis_results)} control opportunities")
-            print(f"   📊 Power range analyzed: {min(self.original_powers):.1f}W - {max(self.original_powers):.1f}W")
-            print(f"   💡 Total energy saved: {total_savings:.3f} kWh")
+            print(f"\n📊 Control System Performance:")
+            print(f"{'-'*50}")
+            print(f"   ✅ Analyzed opportunities: {len(self.analysis_results)}")
+            print(f"   📊 Power range: {min(self.original_powers):.1f}W - {max(self.original_powers):.1f}W")
+            print(f"   💡 Energy saved: {total_savings:.3f} kWh")
             print(f"   💰 Cost savings: £{total_savings * uk_electricity_rate:.3f}")
-            print(f"   📈 Average energy reduction: {t_test_results['percentage_reduction']:.1f}%")
-            
-            print(f"\n📋 Power Category Breakdown:")
-            for category in category_summary.index:
-                count = int(category_summary.loc[category, ('original_power', 'count')])
-                avg_power = category_summary.loc[category, ('original_power', 'mean')]
-                total_reduction = category_summary.loc[category, ('power_reduction', 'sum')]
-                print(f"   {category}: {count} samples, avg {avg_power:.1f}W, saved {total_reduction:.1f}W total")
+            print(f"   📈 Average reduction: {t_test_results['percentage_reduction']:.1f}%")
             
             if t_test_results['p_value'] < 0.05:
-                print(f"\n   🎯 Statistical conclusion: Your system significantly reduces TOTAL power consumption!")
+                print(f"\n   🎯 Statistical Result: Significant reduction achieved!")
                 print(f"       (p = {t_test_results['p_value']:.6f}, Cohen's d = {t_test_results['cohens_d']:.3f})")
             else:
-                print(f"\n   ⚠️ Statistical conclusion: Effect not statistically significant")
+                print(f"\n   ⚠️ Statistical Result: Not statistically significant")
                 print(f"       (p = {t_test_results['p_value']:.6f})")
         
-        print(f"\n📊 Complete power analysis visualization: Displayed above")
         print(f"{'='*80}")
 
 

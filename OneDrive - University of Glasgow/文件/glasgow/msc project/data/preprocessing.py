@@ -290,10 +290,10 @@ def save_data_csv(df, output_path='data_after_preprocessing.csv'):
 
 if __name__ == "__main__":
     # 測試文件路徑
-    file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/20250707_20250728_D8.csv"
+    # file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/20250707_20250728_D8.csv"
     # file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/20250707_20250728_D6.csv"
-
     # file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/20250707_20250731_D3.csv"
+    file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/202507014_20250720_D8.csv"
 
     print('====================== data preprocessing ======================')
 

@@ -333,22 +333,6 @@ def plot_power_classification_scatter(df, threshold_1=36, threshold_2=81, thresh
     plt.show()
 
 def plot_energy_consumption_pie(df, time_interval_minutes=15):
-    """
-    繪製各power state的總耗能量比例圓餅圖
-    
-    Parameters:
-    df: DataFrame with 'power' and 'power_category' columns
-    time_interval_minutes: 數據採樣間隔（分鐘），預設15分鐘
-    """
-    
-    # 檢查必要的欄位
-    if 'power_category' not in df.columns:
-        print("錯誤：DataFrame中缺少 'power_category' 欄位")
-        return
-    
-    if 'power' not in df.columns:
-        print("錯誤：DataFrame中缺少 'power' 欄位")
-        return
     
     # 計算時間間隔（小時）
     time_interval_hours = time_interval_minutes / 60
@@ -646,9 +630,10 @@ def plot_power_classification(df):
 
 if __name__ == "__main__":
     # Test file path (modify as needed)
-    file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/20250707_20250728_D8.csv"
+    # file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/20250707_20250728_D8.csv"
     # file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/20250707_20250728_D6.csv"
     # file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/20250707_20250731_D3.csv"
+    file_path = "C:/Users/王俞文/OneDrive - University of Glasgow/文件/glasgow/msc project/data/202507014_20250720_D8.csv"
     
     # Read data
     df = read_file(file_path)
